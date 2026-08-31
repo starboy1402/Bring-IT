@@ -2,6 +2,8 @@ import { useCallback, useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { Card, StatusBadge, UrgencyBadge } from '../components/Badges'
 import AppHeader from '../components/AppHeader'
+import ChatBox from '../components/ChatBox'
+import RatingForm from '../components/RatingForm'
 import { useAuth } from '../context/AuthContext'
 import {
   acceptRequest,
@@ -172,7 +174,7 @@ export default function RequestDetailPage() {
           </p>
         )}
 
-        {(canAccept || canCancel || canAdvance) && (
+                {(canAccept || canCancel || canAdvance) && (
           <Card>
             <div className="flex flex-wrap gap-3">
               {canAccept && (
@@ -217,6 +219,21 @@ export default function RequestDetailPage() {
               )}
             </div>
           </Card>
+        )}
+
+        {profile?.id && (
+          <ChatBox
+            request={request}
+            names={names}
+            myProfileId={profile.id}
+          />
+        )}
+
+        {profile?.id && (
+          <RatingForm
+            request={request}
+            myProfileId={profile.id}
+          />
         )}
 
         <Card>

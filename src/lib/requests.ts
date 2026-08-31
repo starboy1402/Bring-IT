@@ -132,3 +132,77 @@ export function advanceRequest(
 ): Promise<Result<{ status: string }>> {
   return rpc('advance_delivery', { p_request_id: requestId, p_to_status: toStatus })
 }
+
+// ---------- Chat (MS-8: participant-only persisted messages) ----------
+
+export interface Message {
+  id: string
+  request_id: string
+  sender_id: string
+  content: string
+  created_at: string
+}
+
+/**
+ * Messages for a request, ordered by the composite cursor (created_at, id)
+ * per docs/planning/06 §4 — never a bare UUID comparison.
+ */
+export async function listMessages(requestId: string): Promise<Message[]> {
+  const { data, error } = await supabase
+    .from('messages')
+    .select('*')
+    .eq('request_id', requestId)
+    .order('created_at', { ascending: true })
+    .order('id', { ascending: true })
+  if (error) throw new Error(error.message)
+  return (data ?? []) as Message[]
+}
+
+export async function sendMessage(
+  requestId: string,
+  content: string,
+): Promise<Result<{ message_id: string }>> {
+  return rpc('send_message', { p_request_id: requestId, p_content: content })
+}
+
+// ---------- Ratings (MS-10: minimal bilateral rating) ----------
+
+export interface Rating {
+  id: string
+  request_id: string
+  rater_id: string
+  ratee_id: string
+  role: 'as_requester' | 'as_deliverer'
+  score: number
+  comment: string | null
+  created_at: string
+}
+
+export type RatingRole = 'as_requester' | 'as_deliverer'
+
+export function submitRating(
+  requestId: string,
+  rateeId: string,
+  role: RatingRole,
+  score: number,
+  comment: string | null,
+): Promise<Result<{ rating_id: string }>> {
+  return rpc('submit_rating', {
+    p_request_id: requestId,
+    p_ratee_id: rateeId,
+    p_role: role,
+    p_score: score,
+    p_comment: comment,
+  })
+}
+
+/** Ratings cast BY the caller for this request (to detect "already rated"). */
+export async function getMyRatings(requestId: string): Promise<Rating[]> {
+  const { data, error } = await supabase
+    .from('ratings')
+    .select('*')
+    .eq('request_id', requestId)
+    .order('created_at', { ascending: false })
+  if (error) throw new Error(error.message)
+  return (data ?? []) as Rating[]
+}
