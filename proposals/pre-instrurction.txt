@@ -1,0 +1,251 @@
+1 Introduction
+Campus life frequently involves small, recurring logistical tasks – picking up food from the
+canteen, delivering documents between departments, forwarding library books, or getting items
+across a large campus – that are inconvenient for a single student to interrupt their schedule for,
+yet too minor to justify a formal courier service. BringIT is a peer-to-peer (P2P) delivery re-
+quest platform designed specifically for a university campus environment. It connects students
+who need something delivered (requesters) with fellow students who are willing to carry it
+out along their existing route (deliverers), turning everyday campus movement into a mutually
+beneficial, community-driven delivery network.
+The platform is built as a full-stack web application using React for the frontend and Su-
+pabase (PostgreSQL, Authentication, Realtime, and Storage) for the backend, allowing users
+to authenticate securely, create and track delivery requests, communicate in real time, and build
+reputation through a gamified leaderboard system.
+2 Background Study
+Commercial delivery and courier platforms such as Pathao, Uber, and Foodpanda solve general-
+purpose delivery problems but are not tailored to the scale, cost sensitivity, or trust structure of
+a university campus. Existing solutions have several shortcomings when applied to a campus
+context:
+• Cost inefficiency: Commercial services charge delivery fees disproportionate to the short
+distances typical of a campus (e.g., one building to another).
+• Lack of trust and community: Deliveries are handled by unknown third-party riders
+rather than verified peers from the same institution.
+• No academic-community integration: General platforms have no concept of student
+identity, class schedules, or campus geography, and therefore cannot optimize for "on-
+the-way" deliveries.
+• Manual, informal coordination: In practice, students currently coordinate small favors
+through scattered WhatsApp/Facebook groups or word of mouth, with no tracking, ac-
+countability, or incentive structure.
+This gap motivates the study of a purpose-built, campus-scoped delivery coordination sys-
+tem that leverages student identity verification, real-time communication, and lightweight gam-
+ification to build a reliable peer delivery network.
+3 Motivation
+The motivation for BringIT stems from recurring, first-hand observations of campus life:
+1. Time scarcity: Students often cannot leave a lab, class, or hall to pick up a parcel, food
+order, or document, even though another student is already walking that exact route.
+2. Underutilized peer trust: Students within the same institution already share an implicit
+layer of trust (verified by student ID) that commercial platforms cannot replicate.
+2
+3. No incentive for informal help: Existing informal delivery favors are unrewarded and
+unstructured, discouraging repeated participation.
+4. Opportunity for a lightweight, low-cost solution: A web application requiring no pro-
+prietary hardware, built entirely on modern, free-tier-friendly technologies (React, Su-
+pabase), can be deployed and iterated on quickly for a student-sized user base.
+These observations directly motivate a system that formalizes peer delivery requests, adds
+accountability through tracking and authentication, and rewards active deliverers – ultimately
+increasing convenience for requesters and creating a rewarding, community-oriented side ac-
+tivity for deliverers.
+4 Application
+BringIT is intended for deployment within a single university or a cluster of geographically
+close campuses. Concrete use cases include:
+• A student stuck in a lab session requests that a canteen order be picked up and dropped
+at their department.
+• A student delivers a lab report or physical document from one faculty building to another
+on their way to class.
+• A resident of a dormitory requests that a parcel be collected from the campus post office
+/ gate.
+• Frequent deliverers build a public reputation via the leaderboard, which can later be tied
+to campus recognition or micro-incentive programs run by student bodies.
+Beyond individual convenience, the platform has secondary value as a community-engagement
+tool: it encourages students to interact across departments and years, and generates a dataset
+of campus mobility and demand patterns that could inform future improvements such as route
+optimization or partnership with campus administration.
+5 Proposed Methodology
+Figure 1 outlines the six-stage methodology used to design and build BringIT:
+1. Requirement Gathering & Problem Analysis: Campus delivery pain points, user roles
+(requester/deliverer), and core functional needs were identified before any design work
+began.
+2. System Design: The overall architecture, database schema, and UI/UX flow were planned,
+laying the foundation for both frontend and backend work.
+3. Parallel Development: Once the design was finalized, work split into two concurrent
+tracks – Frontend Development (React + Tailwind CSS pages, components, and contexts)
+and the Backend & Data Layer (Supabase authentication, PostgreSQL, Realtime, and
+Storage) – allowing both halves of the stack to progress independently against the shared
+design.
+3
+Requirement Gathering &
+Problem Analysis
+System Design
+(Architecture, DB Schema, UI/UX)
+Frontend Development
+React + Tailwind CSS
+(Pages, Components, Contexts)
+Backend & Data Layer
+Supabase (Auth, Postgres,
+Realtime, Storage)
+Core Module Implementation
+Authentication | Delivery Request CRUD |
+Real-time Sync | Leaderboard | Theming
+Integration & Testing
+(Component, Functional, and User-flow Testing)
+Deployment & Evaluation
+(Vercel Hosting, User Feedback)
+Figure 1: Development methodology and workflow followed for BringIT
+4. Core Module Implementation: The two tracks converge here, where the actual fea-
+ture modules (authentication, delivery request CRUD, real-time synchronization, leader-
+board, and theming) are implemented by wiring the frontend to the backend.
+5. Integration & Testing: The completed modules are integrated and verified through
+component-level, functional, and end-to-end user-flow testing to catch issues before re-
+lease.
+6. Deployment & Evaluation: The application is deployed (via Vercel) and evaluated using
+real user feedback, closing the loop back into future iterations of the design.
+This is essentially an Agile, iterative methodology: rather than a strict one-way waterfall,
+the boundary between core implementation, testing, and deployment is revisited in short cycles
+as feedback comes in, allowing features such as route-based matching or push notifications to
+be layered on in later iterations without redoing the whole pipeline.
+5.1 Delivery Request Status Flow
+Figure 2 depicts the status flow of a delivery request from creation to completion.
+4
+Requester creates
+delivery request
+Request listed
+(status: Pending)
+Deliverer
+accepts?
+Status: Accepted
+Realtime chat opened
+Deliverer picks up
+& transports item
+Status: In Transit
+Item delivered
+Status: Completed
+Points awarded
+Leaderboard updated
+Request remains
+open / re-listed
+Yes
+No
+Figure 2: Delivery request lifecycle and status flow
+6 Features
+• Secure Authentication & Profiles: JWT-based sign-up/login via Supabase Auth; users
+must complete a profile (including student_id) before creating or accepting requests.
+• Delivery Request Management: Full CRUD support for delivery requests, including
+5
+detailed nested views for tracking individual request status and history.
+• Real-Time Synchronization: WebSocket-based useRealtime hooks provide live sta-
+tus updates, in-app notifications, and instant messaging between requester and deliverer.
+• Leaderboard Gamification: A point-based leaderboard rewards frequent, reliable de-
+liverers and encourages sustained platform engagement.
+• Customizable UI/UX: Dark/Light theme switching, animated components (Framer Motion-
+style interactions), toast notifications, and context-driven modal dialogs.
+• Responsive, Mobile-First Design: A fully responsive layout built with Tailwind CSS,
+ensuring usability across phones, tablets, and desktops – important given most students
+will access the platform on mobile devices while on campus.
+7 Tools
+Category Tools / Technologies
+Frontend Framework React 19, React Router v7, Vite (bundler)
+Styling Tailwind CSS v4, clsx, tailwind-merge
+Backend / Database Supabase (PostgreSQL, Authentication, Realtime, Storage)
+Icons & UI Assets Lucide React
+Version Control & Hosting Git, GitHub, Vercel (deployment)
+Development Environment Visual Studio Code, Node.js (v18+), npm
+Table 1: Development tools and technology stack
+8 Conclusion
+BringIT addresses a practical, everyday problem faced by university students by introducing a
+structured, trust-based, peer-to-peer delivery platform tailored to campus life. By combining a
+modern React frontend with the Supabase backend-as-a-service ecosystem, the project achieves
+rapid development velocity while still delivering core requirements: secure authentication, real-
+time request tracking, in-app communication, and gamified incentives. The proposed Agile
+methodology and modular architecture ensure the system can be extended incrementally – fu-
+ture iterations may include route-based matching, push notifications, and analytics on campus
+delivery patterns. Overall, BringIT is expected to demonstrate how lightweight, community-
+driven software can meaningfully improve convenience and collaboration within a university
+ecosystem
+
+
+1
+Software Engineering (Sessional) [CSE-355]
+Proposal Report on:
+BringIt – Peer to Peer Delivery
+Name Student ID
+Mahmudul Hasan 2204040
+Sakib Alif 2204051
+Ayan Barua 2204053
+Mir Md. Saki Kowsar
+Professor
+Department of CSE, CUET
+Md. Refaj Hossan
+Lecturer
+Department of CSE, CUET
+Department of Computer Science and Engineering (CSE)
+Chittagong University of Engineering & Technology (CUET)
+Chattogram-4349, Bangladesh
+1 Introduction / Background
+CUET’s campus is located roughly 30 kilometers from Chittagong city, and a large share
+of the student body lives on-campus in residential halls. Everyday necessities that are not
+available near campus — stationery, medicine, specific food items, documents, or exam
+materials — require a trip into the city that many students cannot always make on short
+notice. At the same time, a significant number of students travel between the campus and
+the city daily for classes, errands, or personal reasons, and this travel capacity is almost
+entirely unused for anything beyond the traveler’s own purpose. Commercial courier
+services such as Pathao or Sundarban exist, but their pricing and turnaround time are
+not designed for small, urgent, single-item deliveries between two known points inside
+a closed university community. BringIt addresses this gap by turning ordinary student
+travel into a trusted, low-cost peer delivery network restricted to verified CUET students.
+2 Project Objectives
+Main Objective
+To design and develop an AI-assisted, web-based peer-to-peer delivery platform for the
+CUET campus community that connects students who need items from the city with
+students who are already traveling, making delivery faster, cheaper, and more trustworthy
+than existing alternatives.
+Specific Objectives
+•To build a request–traveler matching system that intelligently pairs delivery requests
+with travelers based on route, timing, and reliability, instead of a simple open feed.
+•To introduce a fair, transparent reward suggestion so requesters do not need to guess
+a reasonable delivery fee.
+•To establish a university-verified trust and reputation system that makes peer delivery
+safe for both requesters and travelers.
+•To provide real-time status tracking of requests from posting to delivery, accessible on
+both desktop and mobile.
+•To reduce dependency on commercial courier services for small, urgent, hyper-local
+deliveries within the CUET campus and Chittagong city.
+3 Scope of the Project
+In Scope
+•Student authentication and verification using university ID/email.
+•Posting, browsing, filtering, and accepting delivery requests.
+•Rule-based matching of requests to suitable travelers.
+1
+•Rule-based reward/price suggestion at the time a request is posted.
+•Delivery status tracking (Open → Accepted → In Progress → Delivered).
+•Star-based rating and delivery history for trust scoring.
+•Responsive web dashboard usable on mobile browsers.
+Out of Scope
+•Native mobile applications (iOS/Android) — the platform will be a responsive web
+app only in this phase.
+•In-app payment processing — reward settlement will remain an off-platform arrange-
+ment (e.g., cash or mobile financial services) between requester and traveler.
+•Delivery outside the CUET campus–Chittagong city corridor.
+4 Proposed Features
+•Secure Authentication: Registration and login restricted to verified CUET student
+IDs or university email addresses.
+•User Profiles: Department- and hall-based profile information, delivery history, and
+credibility score.
+•Request Management: Posting requests with pickup/drop-off locations, item de-
+scription, urgency tagging (High/Medium/Low), and search/filtering by route.
+•Delivery Workflow: Job acceptance by travelers and status tracking through Open,
+Accepted, In Progress, and Delivered states.
+•Trust & Reputation System: Star-based ratings and a running credibility score
+built from delivery history.
+•Responsive Dashboard: A mobile-friendly interface for real-time updates on active
+and past deliveries.
+AI Integration :
+•Smart Traveler–Request Matching (Rule-Based Scoring): Each open request
+is scored per traveler using a weighted formula:
+Score = w1·RouteOverlap+w2·TimeWindowOverlap+w3·UrgencyWeight+w4·TravelerRating
+where RouteOverlap measures how closely the pickup/drop-off points sit along the
+traveler’s stated path, TimeWindowOverlap measures how well the request’s timing fits
+the traveler’s travel window, UrgencyWeight comes from the request’s High/Medium/Low
+tag, and TravelerRating is the traveler’s own credibility score. Requests are then
+ranked highest-score-first on that traveler’s feed. This is a deterministic formula, not
+a trained model, so it works correctly from day one with no historical data.
+2
