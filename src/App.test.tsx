@@ -38,7 +38,8 @@ describe('App smoke test', () => {
         <App />
       </MemoryRouter>,
     )
-    expect(screen.getByRole('heading', { name: 'BringIt' })).toBeInTheDocument()
-    expect(screen.getByText('Alice')).toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: 'Welcome, Alice' })).toBeInTheDocument()
+    expect(screen.getByRole('link', { name: 'Browse open requests' })).toBeInTheDocument()
+    expect(screen.getByRole('link', { name: 'Post a delivery request' })).toBeInTheDocument()
   })
 })
