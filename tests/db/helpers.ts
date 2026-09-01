@@ -118,3 +118,16 @@ export async function rpcCall(
   if (error) throw new Error(`${fn} rpc error: ${error.message}`)
   return data as { ok: boolean; code?: string } & Record<string, unknown>
 }
+
+export type AdminRole = 'owner' | 'admin' | 'moderator'
+
+/** Test-only: grants an admin role to an existing profile via the service
+ *  client (bypasses RLS). No client path can self-promote (03 §3.7). */
+export async function grantAdminRole(profileId: string, role: AdminRole): Promise<void> {
+  const svc = createServiceClient()
+  const { error } = await svc.from('admin_roles').insert({
+    user_id: profileId,
+    role,
+  })
+  if (error) throw new Error(`grantAdminRole failed: ${error.message}`)
+}

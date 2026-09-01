@@ -384,6 +384,20 @@ deno_version = 2
 # [edge_runtime.secrets]
 # secret_key = "env(SECRET_VALUE)"
 
+# T-D5/T-D6: trusted server operations.
+# admin_delete_or_anonymize_user is caller-invoked and must carry a valid JWT
+# (verify_jwt = true); process-notification-outbox is scheduled via pg_cron and
+# is invoked by the platform (verify_jwt = false; it holds the service role key
+# internally and exposes no user data).
+[functions.admin_delete_or_anonymize_user]
+verify_jwt = true
+
+[functions.process-notification-outbox]
+verify_jwt = false
+# MVP schedule: on the minute. pg_cron (Supabase scheduling) has 1-minute
+# granularity; the doc's 30-second cadence is approximated here.
+schedule = "* * * * *"
+
 [analytics]
 enabled = true
 port = 54327

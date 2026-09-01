@@ -4,6 +4,7 @@ import { Card, StatusBadge, UrgencyBadge } from '../components/Badges'
 import AppHeader from '../components/AppHeader'
 import ChatBox from '../components/ChatBox'
 import RatingForm from '../components/RatingForm'
+import ReportButton from '../components/ReportButton'
 import { useAuth } from '../context/AuthContext'
 import {
   acceptRequest,
@@ -117,6 +118,29 @@ export default function RequestDetailPage() {
     (isDeliverer && request.status === 'accepted')
   const canAdvance =
     isDeliverer && (request.status === 'accepted' || request.status === 'in_progress')
+
+  // Who can this user report? (submit_report RPC re-validates server-side.)
+  // - Participants report the other participant.
+  // - Any verified non-suspended viewer may report the requester of an open request.
+  let reportTarget: { id: string; name: string } | null = null
+  if (profile) {
+    if (profile.id === request.requester_id && request.deliverer_id) {
+      reportTarget = {
+        id: request.deliverer_id,
+        name: names[request.deliverer_id] ?? 'the deliverer',
+      }
+    } else if (profile.id === request.deliverer_id) {
+      reportTarget = {
+        id: request.requester_id,
+        name: names[request.requester_id] ?? 'the requester',
+      }
+    } else if (request.status === 'open' && profile.is_verified && !profile.is_suspended) {
+      reportTarget = {
+        id: request.requester_id,
+        name: names[request.requester_id] ?? 'the requester',
+      }
+    }
+  }
 
   return (
     <div className="min-h-screen bg-slate-50">
@@ -233,6 +257,14 @@ export default function RequestDetailPage() {
           <RatingForm
             request={request}
             myProfileId={profile.id}
+          />
+        )}
+
+        {reportTarget && profile?.id && (
+          <ReportButton
+            requestId={request.id}
+            targetId={reportTarget.id}
+            targetName={reportTarget.name}
           />
         )}
 

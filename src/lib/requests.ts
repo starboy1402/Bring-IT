@@ -206,3 +206,23 @@ export async function getMyRatings(requestId: string): Promise<Rating[]> {
   if (error) throw new Error(error.message)
   return (data ?? []) as Rating[]
 }
+
+// ---------- Reports (MS-13: minimal user-facing report submission) ----------
+
+export interface SubmitReportInput {
+  requestId: string
+  targetId: string
+  reason: string
+  description?: string | null
+}
+
+export function submitReport(
+  input: SubmitReportInput,
+): Promise<Result<{ report_id: string }>> {
+  return rpc('submit_report', {
+    p_request_id: input.requestId,
+    p_target_id: input.targetId,
+    p_reason: input.reason,
+    p_description: input.description ?? null,
+  })
+}
