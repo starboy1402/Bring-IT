@@ -17,9 +17,13 @@ export function createServiceClient(): SupabaseClient {
   })
 }
 
-export function createAnonClient(): SupabaseClient {
+export function createAnonClient(storageKey?: string): SupabaseClient {
   return createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
-    auth: { autoRefreshToken: false, persistSession: false },
+    auth: {
+      autoRefreshToken: false,
+      persistSession: storageKey ? true : false,
+      storageKey: storageKey,
+    },
   })
 }
 
@@ -38,6 +42,8 @@ export interface TestUser {
   verified: boolean
 }
 
+export type AdminRole = 'owner' | 'admin' | 'moderator'
+
 /**
  * Signs up a user, creates their profile via the create_profile RPC, and
  * returns an authenticated client + profile id.
@@ -47,7 +53,7 @@ export async function createTestUser(
   displayName = 'Test User',
 ): Promise<TestUser> {
   const email = uniqueEmail(domain)
-  const client = createAnonClient()
+  const client = createAnonClient(`test-user-${emailCounter}`)
 
   const { data: signUpData, error: signUpError } = await client.auth.signUp({
     email,
@@ -57,17 +63,17 @@ export async function createTestUser(
     throw new Error(`signUp failed for ${email}: ${signUpError?.message}`)
   }
 
-  const { data: profileResult, error: profileError } = await client.rpc('create_profile', {
+  const profileResult = await client.rpc('create_profile', {
     p_display_name: displayName,
     p_student_id: '2204' + String(emailCounter).padStart(4, '0'),
     p_department: 'CSE',
     p_hall: 'Hall A',
     p_phone: '01700000000',
   })
-  if (profileError) {
-    throw new Error(`create_profile failed: ${profileError.message}`)
+  if (profileResult.error) {
+    throw new Error(`create_profile failed: ${profileResult.error.message}`)
   }
-  const profile = profileResult as { ok: boolean; profile_id: string }
+  const profile = profileResult.data as { ok: boolean; profile_id: string }
   if (!profile.ok) {
     throw new Error(`create_profile returned error: ${JSON.stringify(profile)}`)
   }
@@ -85,7 +91,11 @@ export async function createTestUser(
   }
 }
 
-/** Convenience: create a verified request as a user. */
+/** Convenience: create a verified request as a user. Success-oriented:
+ *  throws (fail fast) on RPC transport errors, business errors (ok:false)
+ *  and missing request_id, so downstream RPC calls never receive
+ *  p_request_id: undefined. Tests that intentionally exercise failed
+ *  request creation must call the create_request RPC directly instead. */
 export async function createRequest(
   user: TestUser,
   overrides: Partial<{
@@ -96,7 +106,7 @@ export async function createRequest(
     urgency: 'low' | 'medium' | 'high'
     reward_suggestion: number
   }> = {},
-): Promise<{ ok: boolean; request_id?: string; status?: string; code?: string }> {
+): Promise<{ ok: true; request_id: string; status: string }> {
   const { data, error } = await user.client.rpc('create_request', {
     p_title: overrides.title ?? 'Bring my lunch from canteen',
     p_description: overrides.description ?? 'Please pick up from main canteen',
@@ -105,8 +115,33 @@ export async function createRequest(
     p_urgency: overrides.urgency ?? 'medium',
     p_reward_suggestion: overrides.reward_suggestion ?? 20,
   })
-  if (error) throw new Error(`create_request rpc error: ${error.message}`)
-  return data as { ok: boolean; request_id?: string; code?: string }
+  if (error) {
+    throw new Error(
+      `createRequest: create_request RPC transport error: ${error.message}`,
+    )
+  }
+  const result = data as {
+    ok?: boolean
+    request_id?: string
+    status?: string
+    code?: string
+    message?: string
+  } | null
+  if (!result || result.ok !== true) {
+    const code = result?.code ?? 'UNKNOWN'
+    const message = result?.message ?? JSON.stringify(result)
+    throw new Error(`createRequest: create_request failed: ${code} — ${message}`)
+  }
+  if (!result.request_id) {
+    throw new Error(
+      `createRequest: create_request returned ok without request_id: ${JSON.stringify(result)}`,
+    )
+  }
+  return {
+    ok: true,
+    request_id: result.request_id,
+    status: result.status ?? 'open',
+  }
 }
 
 export async function rpcCall(
@@ -115,11 +150,11 @@ export async function rpcCall(
   args: Record<string, unknown>,
 ): Promise<{ ok: boolean; code?: string } & Record<string, unknown>> {
   const { data, error } = await client.rpc(fn, args)
-  if (error) throw new Error(`${fn} rpc error: ${error.message}`)
+  if (error) {
+    throw new Error(`${fn} rpc error: ${error.message}`)
+  }
   return data as { ok: boolean; code?: string } & Record<string, unknown>
 }
-
-export type AdminRole = 'owner' | 'admin' | 'moderator'
 
 /** Test-only: grants an admin role to an existing profile via the service
  *  client (bypasses RLS). No client path can self-promote (03 §3.7). */
@@ -130,4 +165,34 @@ export async function grantAdminRole(profileId: string, role: AdminRole): Promis
     role,
   })
   if (error) throw new Error(`grantAdminRole failed: ${error.message}`)
+}
+
+/** Test-only: toggle is_verified on a profile via the service client (bypasses RLS). */
+export async function unverify(target: TestUser): Promise<void> {
+  const svc = createServiceClient()
+  const { error } = await svc
+    .from('profiles')
+    .update({ is_verified: false })
+    .eq('id', target.profileId)
+  if (error) throw new Error(`unverify failed: ${error.message}`)
+}
+
+/** Test-only: toggle is_suspended on a profile via the service client (bypasses RLS). */
+export async function suspend(target: TestUser): Promise<void> {
+  const svc = createServiceClient()
+  const { error } = await svc
+    .from('profiles')
+    .update({ is_suspended: true })
+    .eq('id', target.profileId)
+  if (error) throw new Error(`suspend failed: ${error.message}`)
+}
+
+/** Test-only: restore is_verified and is_suspended to active values. */
+export async function reactivate(target: TestUser): Promise<void> {
+  const svc = createServiceClient()
+  const { error } = await svc
+    .from('profiles')
+    .update({ is_verified: true, is_suspended: false })
+    .eq('id', target.profileId)
+  if (error) throw new Error(`reactivate failed: ${error.message}`)
 }

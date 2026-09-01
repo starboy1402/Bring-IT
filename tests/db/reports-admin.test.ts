@@ -497,24 +497,33 @@ describe('admin resolution operations (T-D5, moderator+/admin+)', () => {
     })
     expect(res.ok).toBe(true)
 
-    const own = await rpcCall(bob.client, 'get_own_private_profile', {})
-    expect((own.profile as { is_suspended: boolean }).is_suspended).toBe(true)
+    try {
+      const own = await rpcCall(bob.client, 'get_own_private_profile', {})
+      expect((own.profile as { is_suspended: boolean }).is_suspended).toBe(true)
 
-    const blocked = await createRequest(bob)
-    expect(blocked.ok).toBe(false)
-    expect(blocked.code).toBe('SUSPENDED')
+      const blocked = await rpcCall(bob.client, 'create_request', {
+        p_title: 'Suspended test',
+        p_description: 'Should fail',
+        p_pickup_location: 'A',
+        p_dropoff_location: 'B',
+        p_urgency: 'low',
+        p_reward_suggestion: 10,
+      })
+      expect(blocked.ok).toBe(false)
+      expect(blocked.code).toBe('SUSPENDED')
 
-    // Re-suspending is a no-op (idempotent).
-    const again = await rpcCall(admin.client, 'admin_suspend_user', {
-      p_target_id: bob.profileId,
-      p_reason: 'Still suspended',
-    })
-    expect(again.ok).toBe(true)
-
-    const lifted = await rpcCall(admin.client, 'admin_unsuspend_user', {
-      p_target_id: bob.profileId,
-    })
-    expect(lifted.ok).toBe(true)
+      // Re-suspending is a no-op (idempotent).
+      const again = await rpcCall(admin.client, 'admin_suspend_user', {
+        p_target_id: bob.profileId,
+        p_reason: 'Still suspended',
+      })
+      expect(again.ok).toBe(true)
+    } finally {
+      const lifted = await rpcCall(admin.client, 'admin_unsuspend_user', {
+        p_target_id: bob.profileId,
+      })
+      expect(lifted.ok).toBe(true)
+    }
 
     const own2 = await rpcCall(bob.client, 'get_own_private_profile', {})
     expect((own2.profile as { is_suspended: boolean }).is_suspended).toBe(false)

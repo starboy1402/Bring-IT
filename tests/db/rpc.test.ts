@@ -78,19 +78,42 @@ describe('create_request (T-D4, MS-3)', () => {
   })
 
   it('blocks unverified users with NOT_VERIFIED', async () => {
-    const res = await createRequest(charlie)
+    // Intentional failure: call the RPC directly instead of the
+    // success-oriented createRequest() helper, which now fails fast.
+    const res = await rpcCall(charlie.client, 'create_request', {
+      p_title: 'Bring my lunch from canteen',
+      p_description: 'Please pick up from main canteen',
+      p_pickup_location: 'Main canteen',
+      p_dropoff_location: 'CSE Building',
+      p_urgency: 'medium',
+      p_reward_suggestion: 20,
+    })
     expect(res.ok).toBe(false)
     expect(res.code).toBe('NOT_VERIFIED')
   })
 
   it('rejects a too-short title with VALIDATION_ERROR', async () => {
-    const res = await createRequest(alice, { title: 'ab' })
+    const res = await rpcCall(alice.client, 'create_request', {
+      p_title: 'ab',
+      p_description: null,
+      p_pickup_location: 'Main canteen',
+      p_dropoff_location: 'CSE Building',
+      p_urgency: 'medium',
+      p_reward_suggestion: 20,
+    })
     expect(res.ok).toBe(false)
     expect(res.code).toBe('VALIDATION_ERROR')
   })
 
   it('rejects a negative reward with VALIDATION_ERROR', async () => {
-    const res = await createRequest(alice, { reward_suggestion: -5 })
+    const res = await rpcCall(alice.client, 'create_request', {
+      p_title: 'Bring my lunch from canteen',
+      p_description: null,
+      p_pickup_location: 'Main canteen',
+      p_dropoff_location: 'CSE Building',
+      p_urgency: 'medium',
+      p_reward_suggestion: -5,
+    })
     expect(res.ok).toBe(false)
     expect(res.code).toBe('VALIDATION_ERROR')
   })
