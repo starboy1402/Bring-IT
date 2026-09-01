@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState, useCallback } from 'react'
 import { supabase } from '../lib/supabase'
 import type { DeliveryRequest, Message } from '../lib/requests'
 import { listMessages, sendMessage } from '../lib/requests'
@@ -12,29 +12,78 @@ interface ChatBoxProps {
 
 const CHAT_STATUSES: DeliveryRequest['status'][] = ['accepted', 'in_progress']
 
+function mergeMessages(existing: Message[], incoming: Message[]): Message[] {
+  const map = new Map<string, Message>()
+  for (const m of existing) map.set(m.id, m)
+  for (const m of incoming) map.set(m.id, m)
+  const merged = Array.from(map.values())
+  merged.sort((a, b) => {
+    if (a.created_at === b.created_at) {
+      return a.id.localeCompare(b.id)
+    }
+    return a.created_at.localeCompare(b.created_at)
+  })
+  return merged
+}
+
 export default function ChatBox({ request, names, myProfileId }: ChatBoxProps) {
   const [messages, setMessages] = useState<Message[]>([])
   const [loading, setLoading] = useState(true)
   const [content, setContent] = useState('')
   const [sending, setSending] = useState(false)
   const bottomRef = useRef<HTMLDivElement>(null)
+  
+  // Track cursors for backfill/polling
+  const cursorRef = useRef<{ createdAt: string; id: string } | null>(null)
 
   const isChatActive = CHAT_STATUSES.includes(request.status)
 
+  // A stable helper to fetch and merge
+  const fetchAndMerge = useCallback(async (mounted: { current: boolean }) => {
+    try {
+      const newMsgs = await listMessages(request.id, cursorRef.current || undefined)
+      if (!mounted.current) return
+      if (newMsgs.length > 0) {
+        setMessages((prev) => {
+          const merged = mergeMessages(prev, newMsgs)
+          const last = merged[merged.length - 1]
+          cursorRef.current = { createdAt: last.created_at, id: last.id }
+          return merged
+        })
+      }
+    } finally {
+      if (mounted.current) {
+        setLoading(false)
+        // Scroll slightly delayed to ensure DOM updated
+        setTimeout(() => bottomRef.current?.scrollIntoView?.({ behavior: 'smooth' }), 0)
+      }
+    }
+  }, [request.id])
+
   useEffect(() => {
     if (!isChatActive) return
-    let mounted = true
-    listMessages(request.id)
-      .then((msgs) => {
-        if (mounted) setMessages(msgs)
-      })
-      .finally(() => {
-        if (mounted) setLoading(false)
-        bottomRef.current?.scrollIntoView?.({ behavior: 'smooth' })
-      })
+    const mounted = { current: true }
 
-    // Realtime: append new messages broadcast on the channel.
-    // The subscription only opens for request_ids the user already authorized.
+    // Initial fetch
+    void fetchAndMerge(mounted)
+
+    let pollInterval: ReturnType<typeof setInterval> | null = null
+    const startPolling = () => {
+      if (!pollInterval) {
+        pollInterval = setInterval(() => {
+          void fetchAndMerge(mounted)
+        }, 15000)
+      }
+    }
+    const stopPolling = () => {
+      if (pollInterval) {
+        clearInterval(pollInterval)
+        pollInterval = null
+      }
+    }
+
+    let realtimeUnavailableTimeout: ReturnType<typeof setTimeout> | null = null
+
     const channel = supabase
       .channel(`messages:request_id=eq.${request.id}`)
       .on(
@@ -43,17 +92,43 @@ export default function ChatBox({ request, names, myProfileId }: ChatBoxProps) {
         (payload) => {
           const newMsg = payload.new as Message
           if (newMsg.request_id === request.id) {
-            setMessages((prev) => [...prev, newMsg])
+            setMessages((prev) => {
+              const merged = mergeMessages(prev, [newMsg])
+              const last = merged[merged.length - 1]
+              cursorRef.current = { createdAt: last.created_at, id: last.id }
+              return merged
+            })
+            setTimeout(() => bottomRef.current?.scrollIntoView?.({ behavior: 'smooth' }), 0)
           }
         },
       )
-      .subscribe()
+      .subscribe((status) => {
+        if (status === 'SUBSCRIBED') {
+          // Re-fetch in case we missed events while connecting/reconnecting
+          void fetchAndMerge(mounted)
+          
+          stopPolling()
+          if (realtimeUnavailableTimeout) {
+            clearTimeout(realtimeUnavailableTimeout)
+            realtimeUnavailableTimeout = null
+          }
+        } else if (status === 'CHANNEL_ERROR' || status === 'CLOSED' || status === 'TIMED_OUT') {
+          // Fallback to polling after 15s of unavailability
+          if (!realtimeUnavailableTimeout) {
+            realtimeUnavailableTimeout = setTimeout(() => {
+              startPolling()
+            }, 15000)
+          }
+        }
+      })
 
     return () => {
-      mounted = false
+      mounted.current = false
+      stopPolling()
+      if (realtimeUnavailableTimeout) clearTimeout(realtimeUnavailableTimeout)
       supabase.removeChannel(channel)
     }
-  }, [request.id, isChatActive])
+  }, [request.id, isChatActive, fetchAndMerge])
 
   async function handleSend() {
     if (!content.trim() || sending) return

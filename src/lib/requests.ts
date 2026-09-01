@@ -147,13 +147,24 @@ export interface Message {
  * Messages for a request, ordered by the composite cursor (created_at, id)
  * per docs/planning/06 §4 — never a bare UUID comparison.
  */
-export async function listMessages(requestId: string): Promise<Message[]> {
-  const { data, error } = await supabase
+export async function listMessages(
+  requestId: string,
+  afterCursor?: { createdAt: string; id: string }
+): Promise<Message[]> {
+  let query = supabase
     .from('messages')
     .select('*')
     .eq('request_id', requestId)
     .order('created_at', { ascending: true })
     .order('id', { ascending: true })
+
+  if (afterCursor) {
+    query = query.or(
+      `created_at.gt.${afterCursor.createdAt},and(created_at.eq.${afterCursor.createdAt},id.gt.${afterCursor.id})`
+    )
+  }
+
+  const { data, error } = await query
   if (error) throw new Error(error.message)
   return (data ?? []) as Message[]
 }
