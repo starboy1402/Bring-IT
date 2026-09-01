@@ -14,11 +14,6 @@ export default function RatingForm({ request, myProfileId }: RatingFormProps) {
   const isRequester = myProfileId === request.requester_id
   const isDeliverer = request.deliverer_id === myProfileId
 
-  // Only show after delivery; only for participants.
-  if (request.status !== 'delivered' || (!isRequester && !isDeliverer)) {
-    return null
-  }
-
   const role: RatingRole = isRequester ? 'as_requester' : 'as_deliverer'
   const rateeId = isRequester ? request.deliverer_id : request.requester_id
   const roleLabel = isRequester ? 'your deliverer' : 'your requester'
@@ -32,7 +27,10 @@ export default function RatingForm({ request, myProfileId }: RatingFormProps) {
   const [error, setError] = useState<string | null>(null)
   const [submitted, setSubmitted] = useState(false)
 
+  const isFormActive = request.status === 'delivered' && (isRequester || isDeliverer)
+
   useEffect(() => {
+    if (!isFormActive) return
     let mounted = true
     getMyRatings(request.id)
       .then((ratings) => {
@@ -41,11 +39,18 @@ export default function RatingForm({ request, myProfileId }: RatingFormProps) {
       .finally(() => {
         if (mounted) setLoading(false)
       })
-  }, [request.id])
+    return () => {
+      mounted = false
+    }
+  }, [request.id, isFormActive])
 
   const alreadyRated = existing.some(
     (r) => r.role === role && r.ratee_id === rateeId,
   )
+
+  if (!isFormActive) {
+    return null
+  }
 
   if (loading) {
     return <p className="text-sm text-slate-500">Loading…</p>

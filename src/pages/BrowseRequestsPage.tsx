@@ -23,8 +23,6 @@ export default function BrowseRequestsPage() {
 
   useEffect(() => {
     let cancelled = false
-    setRequests(null)
-    setError(null)
     listOpenRequests(urgency || undefined)
       .then((rows) => {
         if (!cancelled) setRequests(rows)
@@ -56,7 +54,11 @@ export default function BrowseRequestsPage() {
         <select
           id="urgency-filter"
           value={urgency}
-          onChange={(e) => setUrgency(e.target.value as '' | Urgency)}
+          onChange={(e) => {
+            setRequests(null)
+            setError(null)
+            setUrgency(e.target.value as '' | Urgency)
+          }}
           className="rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm"
         >
           {URGENCY_FILTERS.map((f) => (

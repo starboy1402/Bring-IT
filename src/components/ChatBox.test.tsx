@@ -111,4 +111,20 @@ describe('ChatBox', () => {
     )
     expect(screen.getByText(/loading/i)).toBeInTheDocument()
   })
+
+  it('rerenders from open to accepted without hook errors', async () => {
+    const openRequest = { ...baseRequest, status: 'open' as const }
+    const { rerender } = render(
+      <ChatBox request={openRequest} names={names} myProfileId={myselfId} />,
+    )
+    // Initially empty
+    expect(screen.queryByRole('textbox')).not.toBeInTheDocument()
+
+    // Rerender with accepted status
+    rerender(<ChatBox request={baseRequest} names={names} myProfileId={myselfId} />)
+
+    await waitFor(() => {
+      expect(screen.getByRole('textbox')).toBeInTheDocument()
+    })
+  })
 })

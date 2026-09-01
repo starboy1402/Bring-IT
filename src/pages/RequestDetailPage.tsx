@@ -36,6 +36,7 @@ export default function RequestDetailPage() {
   const { id = '' } = useParams()
   const { profile } = useAuth()
 
+  const [prevId, setPrevId] = useState(id)
   const [request, setRequest] = useState<DeliveryRequest | null>(null)
   const [names, setNames] = useState<Record<string, string>>({})
   const [events, setEvents] = useState<StatusEvent[]>([])
@@ -44,32 +45,65 @@ export default function RequestDetailPage() {
   const [error, setError] = useState<string | null>(null)
   const [busy, setBusy] = useState(false)
 
-  const reload = useCallback(async () => {
+  if (id !== prevId) {
+    setPrevId(id)
+    setLoading(true)
+    setNotFound(false)
     setError(null)
+    setRequest(null)
+    setEvents([])
+  }
+
+  const fetchRequestData = useCallback(async () => {
+    const [req, evts] = await Promise.all([getRequest(id), getStatusHistory(id)])
+    if (!req) return { req: null, evts: [], fetchedNames: {} }
+    const ids = [req.requester_id, req.deliverer_id].filter(
+      (v): v is string => v !== null,
+    )
+    const fetchedNames = await getProfileNames(ids)
+    return { req, evts, fetchedNames }
+  }, [id])
+
+  const reload = useCallback(async () => {
     try {
-      const [req, evts] = await Promise.all([getRequest(id), getStatusHistory(id)])
-      if (!req) {
+      const data = await fetchRequestData()
+      if (!data.req) {
         setNotFound(true)
         return
       }
-      setRequest(req)
-      setEvents(evts)
-      const ids = [req.requester_id, req.deliverer_id].filter(
-        (v): v is string => v !== null,
-      )
-      setNames(await getProfileNames(ids))
+      setRequest(data.req)
+      setEvents(data.evts)
+      setNames(data.fetchedNames)
     } catch (err) {
       setError((err as Error).message)
     } finally {
       setLoading(false)
     }
-  }, [id])
+  }, [fetchRequestData])
 
   useEffect(() => {
-    setLoading(true)
-    setNotFound(false)
-    void reload()
-  }, [reload])
+    let cancelled = false
+    fetchRequestData()
+      .then((data) => {
+        if (cancelled) return
+        if (!data.req) {
+          setNotFound(true)
+          return
+        }
+        setRequest(data.req)
+        setEvents(data.evts)
+        setNames(data.fetchedNames)
+      })
+      .catch((err) => {
+        if (!cancelled) setError((err as Error).message)
+      })
+      .finally(() => {
+        if (!cancelled) setLoading(false)
+      })
+    return () => {
+      cancelled = true
+    }
+  }, [fetchRequestData])
 
   async function runAction(action: () => Promise<{ ok: boolean; message?: string }>) {
     setBusy(true)

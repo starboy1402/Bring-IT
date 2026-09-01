@@ -19,9 +19,10 @@ export default function ChatBox({ request, names, myProfileId }: ChatBoxProps) {
   const [sending, setSending] = useState(false)
   const bottomRef = useRef<HTMLDivElement>(null)
 
-  if (!CHAT_STATUSES.includes(request.status)) return null
+  const isChatActive = CHAT_STATUSES.includes(request.status)
 
   useEffect(() => {
+    if (!isChatActive) return
     let mounted = true
     listMessages(request.id)
       .then((msgs) => {
@@ -52,7 +53,7 @@ export default function ChatBox({ request, names, myProfileId }: ChatBoxProps) {
       mounted = false
       supabase.removeChannel(channel)
     }
-  }, [request.id])
+  }, [request.id, isChatActive])
 
   async function handleSend() {
     if (!content.trim() || sending) return
@@ -66,6 +67,8 @@ export default function ChatBox({ request, names, myProfileId }: ChatBoxProps) {
       setSending(false)
     }
   }
+
+  if (!isChatActive) return null
 
   return (
     <Card>

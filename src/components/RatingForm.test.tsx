@@ -121,4 +121,22 @@ describe('RatingForm', () => {
       )
     })
   })
+
+  it('rerenders from unavailable to available without hook errors', async () => {
+    const acceptedRequest = { ...deliveredRequest, status: 'accepted' as const }
+    const { rerender } = render(
+      <RatingForm request={acceptedRequest} myProfileId="prof-requester" />,
+    )
+    expect(screen.queryByRole('heading')).not.toBeInTheDocument()
+
+    rerender(
+      <RatingForm request={deliveredRequest} myProfileId="prof-requester" />,
+    )
+
+    await waitFor(() => {
+      expect(
+        screen.getByRole('heading', { name: /rate your deliverer/i }),
+      ).toBeInTheDocument()
+    })
+  })
 })
