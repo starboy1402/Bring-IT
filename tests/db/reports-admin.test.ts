@@ -721,4 +721,26 @@ describe('account deletion & anonymization (T-D5, 03 §8)', () => {
     const { data: authUser } = await svc.auth.admin.getUserById(busy.userId)
     expect(authUser?.user ?? null).not.toBeNull()
   })
+
+  it('Edge Function boundary: validation error on missing target_profile_id', async () => {
+    const { data, error } = await admin.client.functions.invoke('admin_delete_or_anonymize_user', {
+      body: { invalid: 'payload' }
+    })
+    // supabase-js returns error on non-2xx
+    expect(error).toBeTruthy()
+    // Depending on supabase-js version, the body might be parsed in error.context
+    const errorBody = await error?.context?.json().catch(() => ({}))
+    expect(errorBody?.code).toBe('VALIDATION_ERROR')
+  })
+
+  it('Edge Function boundary: rejects non-admin caller', async () => {
+    // create a regular user for this test
+    const localRegular = await createTestUser('cuet.ac.bd', 'Local Regular')
+    const { data, error } = await localRegular.client.functions.invoke('admin_delete_or_anonymize_user', {
+      body: { target_profile_id: victim.profileId }
+    })
+    expect(error).toBeTruthy()
+    const errorBody = await error?.context?.json().catch(() => ({}))
+    expect(errorBody?.code).toBe('ADMIN_REQUIRED')
+  })
 })

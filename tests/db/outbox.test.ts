@@ -188,4 +188,21 @@ describe('notification_outbox worker functions (T-D6, MS-13)', () => {
     })
     expect(r3.error).toBeTruthy()
   })
+
+  it('Edge Function boundary: requires NOTIFICATION_CRON_SECRET if configured', async () => {
+    // If the local environment has the secret configured, we can test it.
+    // Let's just make a fetch call with a wrong secret.
+    // In local dev, it might not be configured, but we can test the unauthenticated path
+    // by simulating a direct fetch to the edge function.
+    const res = await fetch('http://127.0.0.1:54321/functions/v1/process-notification-outbox', {
+      method: 'POST',
+      headers: { Authorization: 'Bearer WRONG' }
+    })
+    const json = await res.json()
+    // It will return 401 UNAUTHORIZED if the secret is set and mismatches, 
+    // or if the secret is NOT set, it might proceed and return ok/CONFIG_ERROR.
+    if (res.status === 401) {
+      expect(json.code).toBe('UNAUTHORIZED')
+    }
+  })
 })

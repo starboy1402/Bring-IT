@@ -16,7 +16,12 @@ interface OutboxRow {
   deduplication_key: string
 }
 
-Deno.serve(async () => {
+Deno.serve(async (req: Request) => {
+  const cronSecret = Deno.env.get('NOTIFICATION_CRON_SECRET')
+  if (cronSecret && req.headers.get('Authorization') !== `Bearer ${cronSecret}`) {
+    return Response.json({ ok: false, code: 'UNAUTHORIZED' }, { status: 401 })
+  }
+
   if (!SUPABASE_URL || !SERVICE_ROLE_KEY) {
     return Response.json({ ok: false, code: 'CONFIG_ERROR' }, { status: 500 })
   }
@@ -72,19 +77,18 @@ Deno.serve(async () => {
 /** Delivery adapter. In production, POST to the configured webhook with the
  *  deduplication key as the idempotency key; locally, log. */
 async function deliver(row: OutboxRow): Promise<void> {
-  if (NOTIFICATION_WEBHOOK_URL) {
-    const res = await fetch(NOTIFICATION_WEBHOOK_URL, {
-      method: 'POST',
-      headers: {
-        'content-type': 'application/json',
-        'x-dedup-key': row.deduplication_key,
-      },
-      body: JSON.stringify({ event_type: row.event_type, payload: row.payload }),
-    })
-    if (!res.ok) {
-      throw new Error(`notification webhook returned ${res.status}`)
-    }
-    return
+  if (!NOTIFICATION_WEBHOOK_URL) {
+    throw new Error('NOTIFICATION_WEBHOOK_URL is not configured')
   }
-  console.info(`[outbox] ${row.deduplication_key} ${row.event_type}`, row.payload)
+  const res = await fetch(NOTIFICATION_WEBHOOK_URL, {
+    method: 'POST',
+    headers: {
+      'content-type': 'application/json',
+      'x-dedup-key': row.deduplication_key,
+    },
+    body: JSON.stringify({ event_type: row.event_type, payload: row.payload }),
+  })
+  if (!res.ok) {
+    throw new Error(`notification webhook returned ${res.status}`)
+  }
 }

@@ -394,9 +394,6 @@ verify_jwt = true
 
 [functions.process-notification-outbox]
 verify_jwt = false
-# MVP schedule: on the minute. pg_cron (Supabase scheduling) has 1-minute
-# granularity; the doc's 30-second cadence is approximated here.
-schedule = "* * * * *"
 
 [analytics]
 enabled = true
