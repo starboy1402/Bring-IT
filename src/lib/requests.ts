@@ -46,15 +46,30 @@ export interface CreateRequestInput {
 // ---------- Reads (RLS-enforced PostgREST selects) ----------
 
 /** Open requests, newest first (docs/planning/01 MS-4). RLS limits to verified users. */
-export async function listOpenRequests(urgency?: Urgency): Promise<DeliveryRequest[]> {
+export async function listOpenRequests(
+  urgency?: Urgency,
+  cursor?: { createdAt: string; id: string },
+  limit = 20
+): Promise<DeliveryRequest[]> {
   let query = supabase
     .from('delivery_requests')
     .select('*')
     .eq('status', 'open')
     .order('created_at', { ascending: false })
+    .order('id', { ascending: false })
+    .limit(limit)
+
   if (urgency) {
     query = query.eq('urgency', urgency)
   }
+
+  if (cursor) {
+    // Keyset pagination: created_at < A OR (created_at = A AND id < B)
+    query = query.or(
+      `created_at.lt.${cursor.createdAt},and(created_at.eq.${cursor.createdAt},id.lt.${cursor.id})`
+    )
+  }
+
   const { data, error } = await query
   if (error) throw new Error(error.message)
   return (data ?? []) as DeliveryRequest[]

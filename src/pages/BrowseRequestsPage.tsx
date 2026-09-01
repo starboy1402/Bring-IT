@@ -20,12 +20,17 @@ export default function BrowseRequestsPage() {
   const [requests, setRequests] = useState<DeliveryRequest[] | null>(null)
   const [urgency, setUrgency] = useState<'' | Urgency>('')
   const [error, setError] = useState<string | null>(null)
+  const [hasMore, setHasMore] = useState(false)
+  const [loadingMore, setLoadingMore] = useState(false)
 
   useEffect(() => {
     let cancelled = false
     listOpenRequests(urgency || undefined)
       .then((rows) => {
-        if (!cancelled) setRequests(rows)
+        if (!cancelled) {
+          setRequests(rows)
+          setHasMore(rows.length === 20)
+        }
       })
       .catch((err: Error) => {
         if (!cancelled) setError(err.message)
@@ -34,6 +39,25 @@ export default function BrowseRequestsPage() {
       cancelled = true
     }
   }, [urgency])
+
+  async function handleLoadMore() {
+    if (!requests || requests.length === 0 || loadingMore) return
+    setLoadingMore(true)
+    setError(null)
+    const last = requests[requests.length - 1]
+    try {
+      const more = await listOpenRequests(urgency || undefined, {
+        createdAt: last.created_at,
+        id: last.id,
+      })
+      setRequests([...requests, ...more])
+      setHasMore(more.length === 20)
+    } catch (err) {
+      setError((err as Error).message)
+    } finally {
+      setLoadingMore(false)
+    }
+  }
 
   return (
     <main className="mx-auto max-w-3xl px-4 py-6">
@@ -126,6 +150,17 @@ export default function BrowseRequestsPage() {
           </li>
         ))}
       </ul>
+      {hasMore && (
+        <div className="mt-6 flex justify-center">
+          <button
+            onClick={() => void handleLoadMore()}
+            disabled={loadingMore}
+            className="rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50 disabled:opacity-50"
+          >
+            {loadingMore ? 'Loading…' : 'Load more'}
+          </button>
+        </div>
+      )}
     </main>
   )
 }
