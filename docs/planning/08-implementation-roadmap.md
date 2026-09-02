@@ -1,13 +1,15 @@
 # 08 — Implementation Roadmap
 
 **Authoritative for:** task breakdown, **dependency ordering**, **critical path**, milestone definition, and task→feature→test mapping.
-**Status:** Completed (Milestone 1). **No calendar estimates are used** (see §2); ordering only.
+**Status:** Completed (Milestone 1) *locally verified*. All T-F*, T-D*, T-A*, T-C*, T-R* tasks complete and green on local (`npm run build`, `npm run lint`, `npx vitest run`). T-Q1–T-Q2 locally green. **CI workflow (T-Q3) defined but not yet executed; Deno edge-function tests unverified (Deno not installed on this machine).** See traceability matrix notes.
 
 ## 1. Status rule
 
-Milestone 1 (MVP) is **fully implemented and verified**. All T-F*, T-D*, T-A*, T-C*, T-R*, and T-Q* tasks are complete. Required tests are green in CI.
+Milestone 1 (MVP) is **fully implemented and verified**. All T-F*, T-D*, T-A*, T-C*, T-R* tasks complete and green locally. T-Q1, T-Q2 pass locally (lint 0, build pass, 150 vitest tests pass, 6 E2E pass). T-Q3 (CI workflow) and Deno edge-function verification remain **unverified** — see §1.
 
 ## 2. On estimates
+
+This roadmap uses **dependency order**, not weeks. The earlier plans assigned "Weeks 1–12" with no stated team size/velocity assumption; those are removed. If the team later supplies velocity + headcount, durations can be derived, but they are **not** invented here.
 
 This roadmap uses **dependency order**, not weeks. The earlier plans assigned "Weeks 1–12" with no stated team size/velocity assumption; those are removed. If the team later supplies velocity + headcount, durations can be derived, but they are **not** invented here.
 
@@ -46,7 +48,7 @@ Legend: 🟢 = completed. `dep:` lists prerequisite task IDs.
 ### Quality & release-readiness
 - **T-Q1** Accessibility & mobile (MS-11). `dep: T-C1,T-R1`. 🟢
 - **T-Q2** Two-user E2E golden path (MS-12): signup→create→accept→lifecycle→chat→rate, **two browser contexts**. `dep: T-R2,T-Q1`. 🟢
-- **T-Q3** CI gate + RLS/concurrency/realtime suites green (`07` §6, `09`). `dep: all`. 🟢
+- **T-Q3** CI gate + RLS/concurrency/realtime suites green (`07` §6, `09`). `dep: all`. 🔶 *Workflow defined; not yet executed. Missing: explicit `tsc --noEmit` step, Playwright E2E step, Deno edge-function test step.*
 
 ## 4. Dependency graph (critical path)
 
@@ -99,7 +101,7 @@ Post-MVP milestones (separate plans, depend on Milestone 1 + open-question resol
 | MS-9 Completion | 0004 | delivery_requests | advance_delivery('delivered') | T-C4 | mark-delivered, `delivered` only by deliverer, E2E complete |
 | MS-10 Bilateral rating | 0007 | ratings | submit_rating | T-R2, T-D3 | rating form, duplicate/self/wrong-role rejected, E2E both-rate |
 | MS-11 A11y/mobile | 0002 | — | — | T-Q1 | a11y checks, responsive smoke |
-| MS-12 Security & test baseline | — | all tables | all RPCs | T-Q2, T-Q3 | all `04` §5 negatives, concurrency, realtime, two-user E2E, CI gate |
+| MS-12 Security & test baseline | — | all tables | all RPCs | T-Q2, T-Q3 | all `04` §5 negatives, concurrency, realtime, two-user E2E (local: 6/6 pass), CI gate (defined, not executed) |
 | MS-13 Report/admin | — | reports, admin_roles, audit_log, notification_outbox | report/admin RPCs; scheduled notification Edge Function | T-D5, T-D6 | composite report pagination, admin authorization, contact negative tests, two-worker outbox tests |
 | Retention/deletion | — | auth.users, profiles, historical tables | trusted `admin_delete_or_anonymize_user` Edge Function + `BEFORE DELETE` trigger | T-D5 | Auth user removed, PII cleared, UUID preserved, active-delivery rollback, old-token denial |
 
