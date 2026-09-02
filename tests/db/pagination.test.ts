@@ -1,4 +1,4 @@
-import { beforeAll, describe, expect, it } from 'vitest'
+import { beforeAll, afterAll, describe, expect, it } from 'vitest'
 import {
   createServiceClient,
   createTestUser,
@@ -56,5 +56,12 @@ describe('Keyset pagination for open requests (T-C2, MS-4)', () => {
     const finalCursor = { createdAt: page2[0].created_at, id: page2[0].id }
     const page3 = (await listOpenRequests('high', finalCursor, 20, alice.client)).filter(r => r.requester_id === alice.profileId)
     expect(page3).toHaveLength(0) // hasMore = false test
+  })
+
+  afterAll(async () => {
+    if (alice?.profileId) {
+      const svc = createServiceClient()
+      await svc.from('delivery_requests').delete().eq('requester_id', alice.profileId)
+    }
   })
 })

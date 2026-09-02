@@ -166,13 +166,67 @@ export default function RequestDetailPage() {
     }
   }
 
+  const statusSteps = ['open', 'accepted', 'in_progress', 'delivered']
+  const currentStepIdx = statusSteps.indexOf(request.status)
+
   return (
-    <div className="min-h-screen bg-slate-50">
+    <div className="min-h-screen bg-slate-50/50">
       <AppHeader />
-      <main className="mx-auto max-w-3xl space-y-4 px-4 py-6">
-        <Link to="/requests" className="inline-block text-sm text-slate-500 underline">
+      <main className="mx-auto max-w-4xl space-y-4 px-4 py-6 sm:px-6">
+        <Link to="/requests" className="inline-block text-xs font-semibold text-slate-500 hover:text-slate-900 transition-colors">
           ← Open requests
         </Link>
+
+        {request.status !== 'cancelled' && (
+          <div aria-label="Delivery Progress" className="rounded-2xl border border-slate-200/80 bg-white p-4 sm:p-5 shadow-xs">
+            <div className="flex items-center justify-between">
+              {[
+                { key: 'open', label: 'Posted' },
+                { key: 'accepted', label: 'Accepted' },
+                { key: 'in_progress', label: 'In Transit' },
+                { key: 'delivered', label: 'Delivered' },
+              ].map((step, idx) => {
+                const isPassed = currentStepIdx > idx
+                const isCurrent = currentStepIdx === idx
+                return (
+                  <div key={step.key} className="flex flex-1 items-center">
+                    <div className="flex flex-col items-center">
+                      <div
+                        className={`flex h-8 w-8 items-center justify-center rounded-full text-xs font-bold transition-all ${
+                          isPassed
+                            ? 'bg-emerald-800 text-white'
+                            : isCurrent
+                            ? 'bg-emerald-50 text-emerald-900 border-2 border-emerald-800 ring-4 ring-emerald-500/10'
+                            : 'bg-slate-100 text-slate-600 border border-slate-200'
+                        }`}
+                      >
+                        {isPassed ? '✓' : idx + 1}
+                      </div>
+                      <span
+                        className={`mt-1.5 text-[11px] font-semibold text-center ${
+                          isCurrent
+                            ? 'text-emerald-900 font-bold'
+                            : isPassed
+                            ? 'text-slate-700'
+                            : 'text-slate-500'
+                        }`}
+                      >
+                        {step.label}
+                      </span>
+                    </div>
+                    {idx < 3 && (
+                      <div
+                        className={`h-0.5 mx-2 flex-1 rounded transition-all ${
+                          currentStepIdx > idx ? 'bg-emerald-700' : 'bg-slate-200'
+                        }`}
+                      />
+                    )}
+                  </div>
+                )
+              })}
+            </div>
+          </div>
+        )}
 
         <Card>
           <div className="flex items-start justify-between gap-3">
@@ -240,7 +294,7 @@ export default function RequestDetailPage() {
                   type="button"
                   disabled={busy}
                   onClick={() => void runAction(() => advanceRequest(id, 'in_progress'))}
-                  className="rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-700 disabled:opacity-50"
+                  className="rounded-lg bg-indigo-700 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-800 disabled:opacity-50"
                 >
                   Mark picked up
                 </button>

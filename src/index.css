@@ -1,1 +1,33 @@
 @import "tailwindcss";
+
+@theme {
+  --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+  --color-brand-50: #ecfdf5;
+  --color-brand-100: #d1fae5;
+  --color-brand-500: #10b981;
+  --color-brand-600: #059669;
+  --color-brand-700: #047857;
+  --color-brand-800: #065f46;
+  --color-brand-900: #064e3b;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  /* Tactile focus rings */
+  :focus-visible {
+    outline: 2px solid var(--color-brand-600, #059669);
+    outline-offset: 2px;
+  }
+}
+
+/* Micro-interaction utilities */
+.press-feedback {
+  transition: transform 120ms cubic-bezier(0.4, 0, 0.2, 1), background-color 150ms ease;
+}
+.press-feedback:active {
+  transform: scale(0.98);
+}
