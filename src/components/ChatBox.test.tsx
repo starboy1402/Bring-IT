@@ -1,4 +1,4 @@
-import { render, screen, waitFor, act } from "@testing-library/react";
+import { render, screen, waitFor, act, fireEvent } from "@testing-library/react";
 import { beforeEach, afterEach, describe, expect, it, vi } from "vitest";
 import ChatBox from "./ChatBox";
 
@@ -263,17 +263,44 @@ describe("ChatBox", () => {
     });
   });
 
-  it("resets state and cursor safely when request ID changes", async () => {
-    const { rerender } = render(
+  it("performs periodic backfill even when realtime is SUBSCRIBED", async () => {
+    render(
       <ChatBox request={baseRequest} names={names} myProfileId={myselfId} />,
+    );
+    await waitFor(() => screen.getByText("Hi, where are you?"));
+    mockedListMessages.mockClear();
+
+    // Channel is SUBSCRIBED
+    act(() => {
+      triggerSubscribe("SUBSCRIBED");
+    });
+
+    // After 5s, backfill should fire
+    await act(async () => {
+      vi.advanceTimersByTime(5000);
+    });
+    expect(mockedListMessages).toHaveBeenCalled();
+
+    // And again at 10s
+    mockedListMessages.mockClear();
+    await act(async () => {
+      vi.advanceTimersByTime(5000);
+    });
+    expect(mockedListMessages).toHaveBeenCalled();
+  });
+
+  it("resets state and cursor safely when request ID changes via key", async () => {
+    const { rerender } = render(
+      <ChatBox key="req-1" request={baseRequest} names={names} myProfileId={myselfId} />,
     );
     await waitFor(() => screen.getByText("Hi, where are you?"));
 
     const request2 = { ...baseRequest, id: "req-2" };
     mockedListMessages.mockResolvedValueOnce([]); // Empty for new req
 
+    // Changing the key forces React to unmount/remount with fresh state
     rerender(
-      <ChatBox request={request2} names={names} myProfileId={myselfId} />,
+      <ChatBox key="req-2" request={request2} names={names} myProfileId={myselfId} />,
     );
 
     // Should clear old messages
@@ -284,5 +311,23 @@ describe("ChatBox", () => {
     expect(supabase.removeChannel).toHaveBeenCalled();
     // Channel subscription to new req
     expect(mockedChannel).toHaveBeenCalledWith("messages:request_id=eq.req-2");
+  });
+
+  it("shows error message on send failure instead of alert", async () => {
+    mockedSendMessage.mockResolvedValueOnce({ ok: false, code: "RATE_LIMITED", message: "Rate limited" });
+    render(
+      <ChatBox request={baseRequest} names={names} myProfileId={myselfId} />,
+    );
+    await waitFor(() => screen.getByText("Hi, where are you?"));
+
+    await act(async () => {
+      await fireEvent.change(screen.getByPlaceholderText("Type a message…"), {
+        target: { value: "Test message" },
+      });
+      await fireEvent.click(screen.getByRole("button", { name: /Send/i }));
+    });
+
+    expect(screen.getByText("Rate limited")).toBeInTheDocument();
+    expect(screen.getByRole("alert")).toHaveTextContent("Rate limited");
   });
 });

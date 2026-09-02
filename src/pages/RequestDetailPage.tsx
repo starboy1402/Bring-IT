@@ -281,6 +281,7 @@ export default function RequestDetailPage() {
 
         {profile?.id && (
           <ChatBox
+            key={request.id}
             request={request}
             names={names}
             myProfileId={profile.id}

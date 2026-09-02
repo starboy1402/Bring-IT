@@ -31,21 +31,13 @@ export default function ChatBox({ request, names, myProfileId }: ChatBoxProps) {
   const [loading, setLoading] = useState(true)
   const [content, setContent] = useState('')
   const [sending, setSending] = useState(false)
+  const [error, setError] = useState<string | null>(null)
   const [realtimeStatus, setRealtimeStatus] = useState('pending')
   const [isReconnecting, setIsReconnecting] = useState(false)
   const bottomRef = useRef<HTMLDivElement>(null)
   
   // Track cursors for backfill/polling
   const cursorRef = useRef<{ createdAt: string; id: string } | null>(null)
-
-  // Reset message state and cursor safely when request ID changes
-  useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setMessages([])
-    cursorRef.current = null
-    setLoading(true)
-    setIsReconnecting(false)
-  }, [request.id])
 
   const isChatActive = CHAT_STATUSES.includes(request.status)
 
@@ -95,6 +87,12 @@ export default function ChatBox({ request, names, myProfileId }: ChatBoxProps) {
       }
     }
 
+    // Periodic backfill: runs even when realtime is SUBSCRIBED to catch dropped events.
+    // Uses composite cursor so it only fetches new messages.
+    const backfillInterval = setInterval(() => {
+      void fetchAndMerge(mounted)
+    }, 5000)
+
     let realtimeUnavailableTimeout: ReturnType<typeof setTimeout> | null = null
 
     const channel = supabase
@@ -141,6 +139,7 @@ export default function ChatBox({ request, names, myProfileId }: ChatBoxProps) {
     return () => {
       mounted.current = false
       stopPolling()
+      clearInterval(backfillInterval)
       if (realtimeUnavailableTimeout) clearTimeout(realtimeUnavailableTimeout)
       supabase.removeChannel(channel)
     }
@@ -149,15 +148,17 @@ export default function ChatBox({ request, names, myProfileId }: ChatBoxProps) {
   async function handleSend() {
     if (!content.trim() || sending) return
     setSending(true)
+    setError(null)
     try {
       const res = await sendMessage(request.id, content.trim())
       if (res.ok) {
         setContent('')
         void fetchAndMerge({ current: true })
       } else {
-        console.error('Send message failed:', res)
-        alert('Failed to send message: ' + (res.message || 'Unknown error'))
+        setError(res.message || 'Failed to send message')
       }
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to send message')
     } finally {
       setSending(false)
     }
@@ -192,6 +193,9 @@ export default function ChatBox({ request, names, myProfileId }: ChatBoxProps) {
         })}
         <div ref={bottomRef} />
       </div>
+      {error && (
+        <p className="mt-2 text-sm text-red-600" role="alert">{error}</p>
+      )}
       <form
         onSubmit={(e) => {
           e.preventDefault()
