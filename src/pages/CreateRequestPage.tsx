@@ -133,11 +133,11 @@ export default function CreateRequestPage() {
                     set('pickup_location', cat.pickup)
                     set('reward', cat.tip)
                   }}
-                  className="flex flex-col items-center justify-center rounded-2xl border border-slate-200 bg-slate-50/50 p-3 text-center transition-all hover:border-emerald-400 hover:bg-emerald-50/50 active:scale-95 cursor-pointer group"
+                  className="pressable flex flex-col items-center justify-center rounded-2xl border border-slate-200 bg-slate-50/50 p-3 text-center transition-all hover:border-emerald-400 hover:bg-emerald-50/50 active:scale-95 cursor-pointer group shadow-2xs"
                 >
                   <span className="text-2xl transition-transform group-hover:scale-110">{cat.icon}</span>
-                  <span className="mt-1 text-xs font-bold text-slate-800">{cat.label}</span>
-                  <span className="text-[10px] font-semibold text-emerald-800">~৳{cat.tip}</span>
+                  <span className="mt-1 text-xs font-bold text-slate-800 tracking-caption">{cat.label}</span>
+                  <span className="text-[10px] font-semibold text-emerald-800 tabular-nums">~৳{cat.tip}</span>
                 </button>
               ))}
             </div>
@@ -281,9 +281,9 @@ export default function CreateRequestPage() {
                     key={tip}
                     type="button"
                     onClick={() => set('reward', tip)}
-                    className={`rounded-lg px-2.5 py-1 text-xs font-bold transition-all cursor-pointer ${
+                    className={`pressable rounded-lg px-2.5 py-1 text-xs font-bold transition-all cursor-pointer tabular-nums active:scale-95 ${
                       form.reward === tip
-                        ? 'bg-emerald-800 text-white'
+                        ? 'bg-emerald-800 text-white shadow-2xs'
                         : 'border border-slate-200 bg-slate-50 text-slate-700 hover:bg-slate-100'
                     }`}
                   >
@@ -304,7 +304,7 @@ export default function CreateRequestPage() {
             <button
               type="submit"
               disabled={submitting}
-              className="w-full sm:w-auto rounded-xl bg-emerald-800 px-6 py-3 text-sm font-bold text-white shadow-sm shadow-emerald-900/20 hover:bg-emerald-900 active:scale-95 disabled:opacity-50 transition-all cursor-pointer"
+              className="pressable w-full sm:w-auto rounded-xl bg-emerald-800 px-6 py-3 text-sm font-bold text-white shadow-sm shadow-emerald-900/20 hover:bg-emerald-900 active:scale-95 disabled:opacity-50 transition-all cursor-pointer"
             >
               {submitting ? 'Posting…' : 'Post request'}
             </button>

@@ -284,7 +284,7 @@ export default function RequestDetailPage() {
             <p className="mt-3 text-sm text-slate-700">{request.description}</p>
           )}
 
-          <div className="mt-3 inline-flex items-center gap-1.5 rounded-full bg-slate-100 border border-slate-200 px-2.5 py-1 text-xs font-semibold text-slate-700">
+          <div className="mt-3 inline-flex items-center gap-1.5 rounded-full bg-slate-100 border border-slate-200 px-2.5 py-1 text-xs font-semibold text-slate-700 tabular-nums">
             <Footprints className="h-3.5 w-3.5 text-slate-500" />
             <span>Estimated journey: {estimateWalk(request.pickup_location, request.dropoff_location)}</span>
           </div>
@@ -301,7 +301,7 @@ export default function RequestDetailPage() {
             {request.reward_suggestion != null && (
               <div>
                 <dt className="font-medium text-slate-500">Suggested reward</dt>
-                <dd className="text-slate-900 font-extrabold text-emerald-800">৳{request.reward_suggestion}</dd>
+                <dd className="text-slate-900 font-extrabold text-emerald-800 tabular-nums">৳{request.reward_suggestion}</dd>
               </div>
             )}
             {request.deliverer_id && (
@@ -318,7 +318,7 @@ export default function RequestDetailPage() {
           </p>
         )}
 
-                {(canAccept || canCancel || canAdvance) && (
+        {(canAccept || canCancel || canAdvance) && (
           <Card>
             <div className="flex flex-wrap gap-3">
               {canAccept && (
@@ -326,7 +326,7 @@ export default function RequestDetailPage() {
                   type="button"
                   disabled={busy}
                   onClick={() => void runAction(() => acceptRequest(id))}
-                  className="rounded-lg bg-emerald-800 px-4 py-2 text-sm font-medium text-white hover:bg-emerald-900 disabled:opacity-50"
+                  className="pressable rounded-xl bg-emerald-800 px-4 py-2.5 text-sm font-semibold text-white shadow-xs hover:bg-emerald-900 active:scale-95 disabled:opacity-50 transition-all cursor-pointer"
                 >
                   Accept delivery
                 </button>
@@ -336,7 +336,7 @@ export default function RequestDetailPage() {
                   type="button"
                   disabled={busy}
                   onClick={() => void runAction(() => advanceRequest(id, 'in_progress'))}
-                  className="rounded-lg bg-indigo-700 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-800 disabled:opacity-50"
+                  className="pressable rounded-xl bg-indigo-700 px-4 py-2.5 text-sm font-semibold text-white shadow-xs hover:bg-indigo-800 active:scale-95 disabled:opacity-50 transition-all cursor-pointer"
                 >
                   Mark picked up
                 </button>
@@ -346,7 +346,7 @@ export default function RequestDetailPage() {
                   type="button"
                   disabled={busy}
                   onClick={() => void runAction(() => advanceRequest(id, 'delivered'))}
-                  className="rounded-lg bg-emerald-800 px-4 py-2 text-sm font-medium text-white hover:bg-emerald-900 disabled:opacity-50"
+                  className="pressable rounded-xl bg-emerald-800 px-4 py-2.5 text-sm font-semibold text-white shadow-xs hover:bg-emerald-900 active:scale-95 disabled:opacity-50 transition-all cursor-pointer"
                 >
                   Mark delivered
                 </button>
@@ -356,7 +356,7 @@ export default function RequestDetailPage() {
                   type="button"
                   disabled={busy}
                   onClick={() => void runAction(() => cancelRequest(id))}
-                  className="rounded-lg border border-red-200 bg-white px-4 py-2 text-sm font-medium text-red-700 hover:bg-red-50 disabled:opacity-50"
+                  className="pressable rounded-xl border border-red-200 bg-white px-4 py-2.5 text-sm font-semibold text-red-700 shadow-2xs hover:bg-red-50 active:scale-95 disabled:opacity-50 transition-all cursor-pointer"
                 >
                   Cancel request
                 </button>

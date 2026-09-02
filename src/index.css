@@ -15,6 +15,7 @@
   html {
     scroll-behavior: smooth;
     -webkit-tap-highlight-color: transparent;
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11", "tnum";
   }
 
   /* Tactile focus rings */
@@ -24,10 +25,37 @@
   }
 }
 
-/* Micro-interaction utilities */
-.press-feedback {
-  transition: transform 120ms cubic-bezier(0.4, 0, 0.2, 1), background-color 150ms ease;
+/* Optical letter-spacing tokens (curated from Brotzky / ui.land) */
+.tracking-display {
+  letter-spacing: -0.025em;
 }
-.press-feedback:active {
-  transform: scale(0.98);
+.tracking-title {
+  letter-spacing: -0.015em;
+}
+.tracking-body {
+  letter-spacing: -0.006em;
+}
+.tracking-caption {
+  letter-spacing: -0.003em;
+}
+
+/* Surface lighting & depth (Linear / Paco Coursey inner specular highlights) */
+.surface-card {
+  background: #ffffff;
+  border: 1px solid rgba(226, 232, 240, 0.85);
+  box-shadow: 0 1px 2px 0 rgba(15, 23, 42, 0.04), inset 0 1px 0 0 rgba(255, 255, 255, 0.9);
+}
+
+.surface-elevated {
+  background: #ffffff;
+  border: 1px solid rgba(226, 232, 240, 0.8);
+  box-shadow: 0 4px 16px -2px rgba(15, 23, 42, 0.06), 0 2px 6px -2px rgba(15, 23, 42, 0.03), inset 0 1px 0 0 rgba(255, 255, 255, 1);
+}
+
+/* Tactile press physics (Rauno Freiberg / fidgetable interaction) */
+.press-feedback, .pressable {
+  transition: transform 120ms cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 150ms ease, border-color 150ms ease, background-color 150ms ease;
+}
+.press-feedback:active, .pressable:active {
+  transform: scale(0.975);
 }

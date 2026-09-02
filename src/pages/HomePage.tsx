@@ -102,10 +102,10 @@ export default function HomePage() {
                 <Link
                   key={cat.id}
                   to="/requests"
-                  className="flex items-center gap-2 rounded-2xl border border-slate-200/90 bg-white px-4 py-2.5 text-xs font-bold text-slate-700 shadow-2xs hover:border-emerald-300 hover:bg-emerald-50/50 hover:text-emerald-900 transition-all shrink-0"
+                  className="pressable flex items-center gap-2 rounded-2xl border border-slate-200/90 bg-white px-4 py-2.5 text-xs font-bold text-slate-700 shadow-2xs hover:border-emerald-300 hover:bg-emerald-50/50 hover:text-emerald-900 transition-all shrink-0 active:scale-95"
                 >
                   <span className="text-base">{cat.icon}</span>
-                  <span>{cat.label}</span>
+                  <span className="tracking-caption">{cat.label}</span>
                 </Link>
               ))}
             </div>
@@ -116,16 +116,16 @@ export default function HomePage() {
               <Link
                 to="/requests"
                 aria-label="Browse open requests"
-                className="group relative flex flex-col justify-between rounded-3xl border border-slate-200/80 bg-white p-6 shadow-xs transition-all duration-200 hover:-translate-y-1 hover:border-emerald-400 hover:shadow-md active:translate-y-0"
+                className="pressable group relative flex flex-col justify-between rounded-3xl border border-slate-200/80 bg-white p-6 shadow-xs transition-all duration-200 hover:-translate-y-0.5 hover:border-emerald-400 hover:shadow-md active:scale-[0.99]"
               >
                 <div>
-                  <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-emerald-50 text-emerald-700 transition-colors group-hover:bg-emerald-800 group-hover:text-white">
+                  <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-emerald-50 text-emerald-700 transition-colors group-hover:bg-emerald-800 group-hover:text-white shadow-2xs">
                     <Compass className="h-6 w-6" />
                   </div>
-                  <h2 className="mt-4 text-lg font-bold text-slate-900">
+                  <h2 className="mt-4 text-lg font-bold text-slate-900 tracking-title">
                     Browse open requests
                   </h2>
-                  <p className="mt-1 text-sm text-slate-600 leading-relaxed">
+                  <p className="mt-1 text-sm text-slate-600 leading-relaxed tracking-body">
                     See what students need delivered across dorms, cafeteria, and library. Pick up a request on your way.
                   </p>
                 </div>
@@ -139,16 +139,16 @@ export default function HomePage() {
               <Link
                 to="/requests/new"
                 aria-label="Post a delivery request"
-                className="group relative flex flex-col justify-between rounded-3xl border border-slate-200/80 bg-white p-6 shadow-xs transition-all duration-200 hover:-translate-y-1 hover:border-teal-400 hover:shadow-md active:translate-y-0"
+                className="pressable group relative flex flex-col justify-between rounded-3xl border border-slate-200/80 bg-white p-6 shadow-xs transition-all duration-200 hover:-translate-y-0.5 hover:border-teal-400 hover:shadow-md active:scale-[0.99]"
               >
                 <div>
-                  <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-teal-50 text-teal-700 transition-colors group-hover:bg-teal-800 group-hover:text-white">
+                  <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-teal-50 text-teal-700 transition-colors group-hover:bg-teal-800 group-hover:text-white shadow-2xs">
                     <PlusCircle className="h-6 w-6" />
                   </div>
-                  <h2 className="mt-4 text-lg font-bold text-slate-900">
+                  <h2 className="mt-4 text-lg font-bold text-slate-900 tracking-title">
                     Post a delivery request
                   </h2>
-                  <p className="mt-1 text-sm text-slate-600 leading-relaxed">
+                  <p className="mt-1 text-sm text-slate-600 leading-relaxed tracking-body">
                     Need food, medicine, prints, or parcels brought to your hall? Create a request with a suggested peer reward.
                   </p>
                 </div>
@@ -192,11 +192,11 @@ export default function HomePage() {
                     <Link
                       key={req.id}
                       to={`/requests/${req.id}`}
-                      className="block rounded-2xl border border-slate-100 bg-slate-50/60 p-4 transition-all hover:border-emerald-300 hover:bg-emerald-50/30"
+                      className="pressable block rounded-2xl border border-slate-100 bg-slate-50/60 p-4 transition-all hover:border-emerald-300 hover:bg-emerald-50/30 active:scale-[0.99]"
                     >
                       <div className="flex items-center justify-between gap-3">
                         <div className="space-y-1">
-                          <h3 className="font-bold text-sm text-slate-900 hover:text-emerald-800">
+                          <h3 className="font-bold text-sm text-slate-900 hover:text-emerald-800 tracking-title">
                             {req.title}
                           </h3>
                           <div className="flex items-center gap-2 text-xs text-slate-600">
@@ -212,7 +212,7 @@ export default function HomePage() {
                         </div>
                         <div className="flex flex-col items-end gap-1 shrink-0">
                           {req.reward_suggestion != null && (
-                            <span className="rounded-full bg-emerald-100 px-2.5 py-0.5 text-xs font-extrabold text-emerald-900">
+                            <span className="rounded-full bg-emerald-100 px-2.5 py-0.5 text-xs font-extrabold text-emerald-900 tabular-nums">
                               ৳{req.reward_suggestion}
                             </span>
                           )}
@@ -294,24 +294,24 @@ export default function HomePage() {
                 <div className="rounded-xl bg-slate-50 p-2.5 border border-slate-100">
                   <div className="flex items-center justify-center gap-1 text-sm font-extrabold text-slate-900">
                     <Star className="h-3.5 w-3.5 fill-amber-500 text-amber-500" aria-hidden="true" />
-                    <span>5.0</span>
+                    <span className="tabular-nums">5.0</span>
                   </div>
                   <span className="text-[10px] font-semibold text-slate-500">Peer Rating</span>
                 </div>
 
                 <div className="rounded-xl bg-slate-50 p-2.5 border border-slate-100">
-                  <span className="font-extrabold text-sm text-slate-900">0</span>
+                  <span className="font-extrabold text-sm text-slate-900 tabular-nums">0</span>
                   <p className="text-[10px] font-semibold text-slate-500">Deliveries</p>
                 </div>
 
                 <div className="rounded-xl bg-slate-50 p-2.5 border border-slate-100">
-                  <span className="font-extrabold text-sm text-emerald-800">৳0</span>
+                  <span className="font-extrabold text-sm text-emerald-800 tabular-nums">৳0</span>
                   <p className="text-[10px] font-semibold text-slate-500">Earned</p>
                 </div>
               </div>
 
               <div className="mt-4 border-t border-slate-100 pt-3">
-                <p className="text-xs text-slate-500 text-center">
+                <p className="text-xs text-slate-500 text-center tracking-body">
                   Deliver for fellow students to build campus rating and earn pocket cash.
                 </p>
               </div>
@@ -328,19 +328,19 @@ export default function HomePage() {
               <ul className="mt-3 space-y-2.5 text-xs text-slate-600">
                 <li className="flex items-center justify-between">
                   <span>Cafeteria ↔ Shahid Hall</span>
-                  <span className="font-bold text-slate-900">~4 min walk</span>
+                  <span className="font-bold text-slate-900 tabular-nums">~4 min walk</span>
                 </li>
                 <li className="flex items-center justify-between">
                   <span>Library ↔ Dr. Q.K. Hall</span>
-                  <span className="font-bold text-slate-900">~6 min walk</span>
+                  <span className="font-bold text-slate-900 tabular-nums">~6 min walk</span>
                 </li>
                 <li className="flex items-center justify-between">
                   <span>Campus Gate ↔ Hall Block</span>
-                  <span className="font-bold text-slate-900">~10 min walk</span>
+                  <span className="font-bold text-slate-900 tabular-nums">~10 min walk</span>
                 </li>
                 <li className="flex items-center justify-between">
                   <span>Medical Center ↔ Cafeteria</span>
-                  <span className="font-bold text-slate-900">~3 min walk</span>
+                  <span className="font-bold text-slate-900 tabular-nums">~3 min walk</span>
                 </li>
               </ul>
             </Card>

@@ -163,14 +163,14 @@ export default function BrowseRequestsPage() {
               key={cat.id}
               type="button"
               onClick={() => setActiveCategory(cat.id)}
-              className={`inline-flex items-center gap-1.5 shrink-0 rounded-full px-3.5 py-1.5 text-xs font-bold transition-all cursor-pointer ${
+              className={`pressable inline-flex items-center gap-1.5 shrink-0 rounded-full px-3.5 py-1.5 text-xs font-bold transition-all cursor-pointer active:scale-95 ${
                 activeCategory === cat.id
                   ? 'bg-emerald-800 text-white shadow-xs'
                   : 'bg-white text-slate-600 border border-slate-200/80 hover:bg-slate-50'
               }`}
             >
               <span>{cat.icon}</span>
-              <span>{cat.label}</span>
+              <span className="tracking-caption">{cat.label}</span>
             </button>
           ))}
         </div>
@@ -281,14 +281,14 @@ export default function BrowseRequestsPage() {
           {filteredRequests?.map((r) => (
             <li key={r.id}>
               <Link to={`/requests/${r.id}`} className="block focus:outline-none group">
-                <Card className="hover:border-emerald-300/80 hover:shadow-md transition-all">
+                <Card className="pressable hover:border-emerald-300/80 hover:shadow-md transition-all active:scale-[0.995]">
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                     <div className="space-y-2 flex-1">
                       <div className="flex items-center gap-2">
                         <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-emerald-50 text-sm shadow-2xs border border-emerald-100 shrink-0">
                           {getCategoryEmoji(r.title)}
                         </span>
-                        <h2 className="font-bold text-slate-900 group-hover:text-emerald-800 transition-colors">
+                        <h2 className="font-bold text-slate-900 group-hover:text-emerald-800 transition-colors tracking-title">
                           {r.title}
                         </h2>
                         {r.requester_id === profile?.id && (
@@ -312,7 +312,7 @@ export default function BrowseRequestsPage() {
                         <span className="hidden">
                           {r.pickup_location} → {r.dropoff_location}
                         </span>
-                        <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-slate-700 bg-slate-100 border border-slate-200 px-2 py-0.5 rounded-full">
+                        <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-slate-700 bg-slate-100 border border-slate-200 px-2 py-0.5 rounded-full tabular-nums">
                           <Footprints className="h-3 w-3 text-slate-500" />
                           {estimateWalk(r.pickup_location, r.dropoff_location)}
                         </span>
@@ -321,7 +321,7 @@ export default function BrowseRequestsPage() {
                       {/* Reward suggestion */}
                       {r.reward_suggestion != null && (
                         <div className="flex items-center gap-1.5 text-xs text-slate-600">
-                          <span className="inline-flex items-center gap-1 rounded-full bg-emerald-50 border border-emerald-200 px-2.5 py-0.5 font-bold text-emerald-900">
+                          <span className="inline-flex items-center gap-1 rounded-full bg-emerald-50 border border-emerald-200 px-2.5 py-0.5 font-bold text-emerald-900 tabular-nums">
                             <Banknote className="h-3.5 w-3.5 text-emerald-700" />
                             Suggested reward: ৳{r.reward_suggestion}
                           </span>
