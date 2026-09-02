@@ -70,7 +70,7 @@ Deno.test('Edge Function: successfully processes items', async () => {
   }
 
   const mockDbClient = {
-    rpc: async (fnName: string, args: any) => {
+    rpc: async (fnName: string) => {
       if (fnName === 'claim_notification_outbox') {
         return { data: [
           { id: 1, event_type: 'test_event', payload: { a: 1 }, deduplication_key: 'dedup1' },
@@ -85,12 +85,12 @@ Deno.test('Edge Function: successfully processes items', async () => {
   }
 
   let fetchCalls = 0
-  const mockFetcher = async (url: string, opts: any) => {
+  const mockFetcher = async () => {
     fetchCalls++
     return new Response(null, { status: 200 })
   }
 
-  const res = await handleRequest(req, env, mockFetcher as any, mockDbClient)
+  const res = await handleRequest(req, env, mockFetcher, mockDbClient)
   assertEquals(res.status, 200)
   const body = await res.json()
   assertEquals(body.ok, true)
@@ -116,7 +116,7 @@ Deno.test('Edge Function: handles webhook failures and records failure', async (
 
   let failedCount = 0
   const mockDbClient = {
-    rpc: async (fnName: string, args: any) => {
+    rpc: async (fnName: string) => {
       if (fnName === 'claim_notification_outbox') {
         return { data: [
           { id: 1, event_type: 'test_event', payload: {}, deduplication_key: 'dedup1' },
@@ -130,11 +130,11 @@ Deno.test('Edge Function: handles webhook failures and records failure', async (
     }
   }
 
-  const mockFetcher = async (url: string, opts: any) => {
+  const mockFetcher = async () => {
     return new Response(null, { status: 500 }) // simulate failure
   }
 
-  const res = await handleRequest(req, env, mockFetcher as any, mockDbClient)
+  const res = await handleRequest(req, env, mockFetcher, mockDbClient)
   assertEquals(res.status, 200)
   const body = await res.json()
   assertEquals(body.ok, true)

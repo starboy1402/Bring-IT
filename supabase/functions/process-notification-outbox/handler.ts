@@ -9,7 +9,11 @@ interface OutboxRow {
 
 export type EnvGetter = (key: string) => string | undefined
 
-export async function handleRequest(req: Request, env: EnvGetter, fetcher: typeof fetch = fetch, dbClient?: any): Promise<Response> {
+export interface NotificationDbClient {
+  rpc(fnName: string, params: Record<string, unknown>): Promise<{ data: unknown; error: { message: string } | null }>
+}
+
+export async function handleRequest(req: Request, env: EnvGetter, fetcher: typeof fetch = fetch, dbClient?: NotificationDbClient): Promise<Response> {
   const cronSecret = env('NOTIFICATION_CRON_SECRET')
   if (!cronSecret) {
     return Response.json({ ok: false, code: 'CONFIG_ERROR', message: 'Missing NOTIFICATION_CRON_SECRET' }, { status: 500 })
