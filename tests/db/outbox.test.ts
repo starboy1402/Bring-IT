@@ -198,7 +198,7 @@ describe('notification_outbox worker functions (T-D6, MS-13)', () => {
       method: 'POST',
       headers: { Authorization: 'Bearer WRONG' }
     })
-    const json = await res.json()
+    const json = await res.json() as { code?: string }
     // It will return 401 UNAUTHORIZED if the secret is set and mismatches, 
     // or if the secret is NOT set, it might proceed and return ok/CONFIG_ERROR.
     if (res.status === 401) {

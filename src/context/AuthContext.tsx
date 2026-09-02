@@ -60,7 +60,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       if (!newSession) {
         setProfile(null)
       } else {
-        void refreshProfile()
+        setLoading(true)
+        refreshProfile().finally(() => {
+          if (mounted) setLoading(false)
+        })
       }
     })
 

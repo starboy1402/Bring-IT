@@ -16,13 +16,13 @@ BEGIN
   PERFORM cron.schedule(
     'process-notification-outbox',
     '* * * * *',
-    $$
+    $cron$
       SELECT net.http_post(
-        url := COALESCE(
+        url => COALESCE(
           current_setting('app.settings.edge_function_url', true),
           'http://supabase-kong:8000/functions/v1/process-notification-outbox'
         ),
-        headers := jsonb_build_object(
+        headers => jsonb_build_object(
           'Content-Type', 'application/json',
           'Authorization', 'Bearer ' || COALESCE(
             current_setting('app.settings.notification_cron_secret', true),
@@ -30,7 +30,7 @@ BEGIN
           )
         )
       );
-    $$
+    $cron$
   );
 EXCEPTION
   WHEN OTHERS THEN

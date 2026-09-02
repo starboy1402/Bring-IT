@@ -723,7 +723,7 @@ describe('account deletion & anonymization (T-D5, 03 §8)', () => {
   })
 
   it('Edge Function boundary: validation error on missing target_profile_id', async () => {
-    const { data, error } = await admin.client.functions.invoke('admin_delete_or_anonymize_user', {
+    const { error } = await admin.client.functions.invoke('admin_delete_or_anonymize_user', {
       body: { invalid: 'payload' }
     })
     // supabase-js returns error on non-2xx
@@ -736,7 +736,7 @@ describe('account deletion & anonymization (T-D5, 03 §8)', () => {
   it('Edge Function boundary: rejects non-admin caller', async () => {
     // create a regular user for this test
     const localRegular = await createTestUser('cuet.ac.bd', 'Local Regular')
-    const { data, error } = await localRegular.client.functions.invoke('admin_delete_or_anonymize_user', {
+    const { error } = await localRegular.client.functions.invoke('admin_delete_or_anonymize_user', {
       body: { target_profile_id: victim.profileId }
     })
     expect(error).toBeTruthy()
