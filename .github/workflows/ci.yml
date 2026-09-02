@@ -32,6 +32,15 @@ jobs:
         npx supabase start
         npx supabase db reset
         npx supabase status -o env >> $GITHUB_ENV
+        # Map supabase status vars → what the test code expects
+        echo "SUPABASE_URL=$API_URL" >> $GITHUB_ENV
+        echo "SUPABASE_ANON_KEY=$ANON_KEY" >> $GITHUB_ENV
+        echo "SUPABASE_SERVICE_KEY=$SERVICE_ROLE_KEY" >> $GITHUB_ENV
+        echo "VITE_SUPABASE_URL=$API_URL" >> $GITHUB_ENV
+        echo "VITE_SUPABASE_ANON_KEY=$ANON_KEY" >> $GITHUB_ENV
+        # Write .env for vitest to pick up VITE_* vars
+        printf "VITE_SUPABASE_URL=%s\nVITE_SUPABASE_ANON_KEY=%s\n" \
+          "$API_URL" "$ANON_KEY" > .env
 
     - name: Setup Deno
       uses: denoland/setup-deno@v1
@@ -51,7 +60,7 @@ jobs:
       run: npm run build
 
     - name: Typecheck
-      run: npx tsc --noEmit
+      run: npx tsc -b
 
     - name: Install Playwright browsers
       run: npx playwright install chromium
