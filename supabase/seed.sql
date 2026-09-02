@@ -1,12 +1,11 @@
 -- Local and CI Provisioning for Cron
--- Set configuration for the current session and for future connections
+-- Uses pure SQL (no psql meta-commands) so supabase db reset can apply it.
 SELECT set_config('app.settings.edge_function_url', 'http://supabase-kong:8000/functions/v1/process-notification-outbox', false);
 
--- The cron secret MUST come from the environment. It is never hardcoded.
--- psql reads $NOTIFICATION_CRON_SECRET from the shell environment.
--- If unset, the seed will fail loudly � this is intentional.
-\set cron_secret `echo $NOTIFICATION_CRON_SECRET` 
-SELECT set_config('app.settings.notification_cron_secret', :'cron_secret', false);
+-- NOTE: For local development, a placeholder secret is used.
+-- In production, replace via Vault/environment before scheduling.
+SELECT set_config('app.settings.notification_cron_secret', 'local-dev-cron-secret-replace-in-production', false);
+
 -- Now explicitly schedule the cron job since migration 0010 safely skipped it
 DO $$
 DECLARE
