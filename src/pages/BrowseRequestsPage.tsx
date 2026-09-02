@@ -116,7 +116,7 @@ export default function BrowseRequestsPage() {
   return (
     <div className="min-h-screen bg-slate-50/50">
       <AppHeader />
-      <main className="mx-auto max-w-4xl px-4 py-6 sm:px-6 pb-24">
+      <main className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8 pb-24">
         {/* Header & New Request CTA */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>

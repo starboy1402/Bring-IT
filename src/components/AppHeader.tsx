@@ -8,8 +8,8 @@ export default function AppHeader() {
   const location = useLocation()
 
   return (
-    <header className="sticky top-0 z-40 border-b border-slate-200/80 bg-white/80 backdrop-blur-md">
-      <div className="mx-auto flex max-w-4xl items-center justify-between px-4 py-2.5 sm:px-6">
+    <header className="sticky top-0 z-40 border-b border-slate-200/80 bg-white/90 backdrop-blur-md">
+      <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-2.5 sm:px-6 lg:px-8">
         {/* Brand Logo & Campus Badge */}
         <div className="flex items-center gap-3">
           <Link

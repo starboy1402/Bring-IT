@@ -180,7 +180,7 @@ export default function RequestDetailPage() {
   return (
     <div className="min-h-screen bg-slate-50/50">
       <AppHeader />
-      <main className="mx-auto max-w-4xl space-y-4 px-4 py-6 sm:px-6 pb-24">
+      <main className="mx-auto max-w-5xl space-y-4 px-4 py-6 sm:px-6 lg:px-8 pb-24">
         <Link to="/requests" className="inline-block text-xs font-semibold text-slate-500 hover:text-slate-900 transition-colors">
           ← Open requests
         </Link>
