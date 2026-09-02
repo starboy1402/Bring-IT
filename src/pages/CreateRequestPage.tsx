@@ -97,7 +97,7 @@ export default function CreateRequestPage() {
   return (
     <div className="min-h-screen bg-slate-50/50">
       <AppHeader />
-      <main className="mx-auto max-w-3xl px-4 py-8 sm:px-6">
+      <main className="mx-auto max-w-3xl px-4 py-8 sm:px-6 pb-24">
         <div className="mb-6">
           <h1 className="text-2xl font-extrabold tracking-tight text-slate-900 sm:text-3xl">
             New delivery request
@@ -115,6 +115,34 @@ export default function CreateRequestPage() {
         )}
 
         <form onSubmit={(e) => void onSubmit(e)} className="rounded-3xl border border-slate-200/80 bg-white p-6 sm:p-8 shadow-xs space-y-5" noValidate>
+          {/* Foodpanda/DoorDash 1-Tap Category Presets */}
+          <div>
+            <span className={labelClasses}>Quick Presets</span>
+            <div className="mt-2 grid grid-cols-2 gap-2.5 sm:grid-cols-4">
+              {[
+                { label: 'Cafeteria Snack', icon: '🍔', pickup: 'Central Cafeteria', title: 'Food from Cafeteria', tip: '40' },
+                { label: 'Campus Meds', icon: '💊', pickup: 'Gate Pharmacy', title: 'Medicine from Gate', tip: '50' },
+                { label: 'Library Notes', icon: '🖨️', pickup: 'Central Library', title: 'Printout from Library', tip: '30' },
+                { label: 'Gate Parcel', icon: '📦', pickup: 'Campus Gate', title: 'Parcel from Gate', tip: '60' },
+              ].map((cat) => (
+                <button
+                  key={cat.label}
+                  type="button"
+                  onClick={() => {
+                    set('title', cat.title)
+                    set('pickup_location', cat.pickup)
+                    set('reward', cat.tip)
+                  }}
+                  className="flex flex-col items-center justify-center rounded-2xl border border-slate-200 bg-slate-50/50 p-3 text-center transition-all hover:border-emerald-400 hover:bg-emerald-50/50 active:scale-95 cursor-pointer group"
+                >
+                  <span className="text-2xl transition-transform group-hover:scale-110">{cat.icon}</span>
+                  <span className="mt-1 text-xs font-bold text-slate-800">{cat.label}</span>
+                  <span className="text-[10px] font-semibold text-emerald-800">~৳{cat.tip}</span>
+                </button>
+              ))}
+            </div>
+          </div>
+
           <div>
             <label htmlFor="title" className={labelClasses}>
               Request Title
@@ -247,6 +275,22 @@ export default function CreateRequestPage() {
                   {fieldErrors.reward}
                 </p>
               )}
+              <div className="mt-2 flex items-center gap-1.5">
+                {['20', '30', '50', '80', '100'].map((tip) => (
+                  <button
+                    key={tip}
+                    type="button"
+                    onClick={() => set('reward', tip)}
+                    className={`rounded-lg px-2.5 py-1 text-xs font-bold transition-all cursor-pointer ${
+                      form.reward === tip
+                        ? 'bg-emerald-800 text-white'
+                        : 'border border-slate-200 bg-slate-50 text-slate-700 hover:bg-slate-100'
+                    }`}
+                  >
+                    ৳{tip}
+                  </button>
+                ))}
+              </div>
             </div>
           </div>
 

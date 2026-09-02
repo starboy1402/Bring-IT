@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
+import { Bike, Navigation, CheckCircle2, XCircle, Package, Footprints } from 'lucide-react'
 import { Card, StatusBadge, UrgencyBadge } from '../components/Badges'
 import AppHeader from '../components/AppHeader'
 import ChatBox from '../components/ChatBox'
@@ -16,6 +17,13 @@ import {
   type DeliveryRequest,
   type StatusEvent,
 } from '../lib/requests'
+
+function estimateWalk(pickup: string, dropoff: string): string {
+  const combined = (pickup + ' ' + dropoff).toLowerCase()
+  if (combined.includes('gate')) return '~10 min walk • 850m'
+  if (combined.includes('library') || combined.includes('cafeteria')) return '~6 min walk • 450m'
+  return '~4 min walk • 300m'
+}
 
 function formatDateTime(iso: string): string {
   return new Date(iso).toLocaleString(undefined, {
@@ -172,10 +180,39 @@ export default function RequestDetailPage() {
   return (
     <div className="min-h-screen bg-slate-50/50">
       <AppHeader />
-      <main className="mx-auto max-w-4xl space-y-4 px-4 py-6 sm:px-6">
+      <main className="mx-auto max-w-4xl space-y-4 px-4 py-6 sm:px-6 pb-24">
         <Link to="/requests" className="inline-block text-xs font-semibold text-slate-500 hover:text-slate-900 transition-colors">
           ← Open requests
         </Link>
+
+        {/* Live Rider Status Card - Foodpanda/DoorDash style */}
+        <div className="rounded-2xl border border-slate-200/90 bg-white p-4 shadow-xs">
+          <div className="flex items-center gap-3.5">
+            <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-emerald-50 text-emerald-800 border border-emerald-100">
+              {request.status === 'open' && <Package className="h-5 w-5 animate-pulse" />}
+              {request.status === 'accepted' && <Bike className="h-5 w-5" />}
+              {request.status === 'in_progress' && <Navigation className="h-5 w-5 text-indigo-700" />}
+              {request.status === 'delivered' && <CheckCircle2 className="h-5 w-5 text-emerald-800" />}
+              {request.status === 'cancelled' && <XCircle className="h-5 w-5 text-rose-600" />}
+            </div>
+            <div>
+              <h2 className="text-sm font-bold text-slate-900">
+                {request.status === 'open' && 'Looking for a peer deliverer...'}
+                {request.status === 'accepted' && 'Deliverer assigned! Heading to pickup point'}
+                {request.status === 'in_progress' && 'Item picked up! Heading to dropoff location'}
+                {request.status === 'delivered' && 'Delivery completed! Thanks for helping out.'}
+                {request.status === 'cancelled' && 'This delivery request was cancelled.'}
+              </h2>
+              <p className="text-xs text-slate-500 mt-0.5">
+                {request.status === 'open' && 'Nearby students have been notified across CUET.'}
+                {request.status === 'accepted' && 'Coordinate via chat or call below.'}
+                {request.status === 'in_progress' && 'Keep an eye out at the dropoff point.'}
+                {request.status === 'delivered' && 'Remember to leave a rating for your peer.'}
+                {request.status === 'cancelled' && 'No deliverer was assigned.'}
+              </p>
+            </div>
+          </div>
+        </div>
 
         {request.status !== 'cancelled' && (
           <div aria-label="Delivery Progress" className="rounded-2xl border border-slate-200/80 bg-white p-4 sm:p-5 shadow-xs">
@@ -247,6 +284,11 @@ export default function RequestDetailPage() {
             <p className="mt-3 text-sm text-slate-700">{request.description}</p>
           )}
 
+          <div className="mt-3 inline-flex items-center gap-1.5 rounded-full bg-slate-100 border border-slate-200 px-2.5 py-1 text-xs font-semibold text-slate-700">
+            <Footprints className="h-3.5 w-3.5 text-slate-500" />
+            <span>Estimated journey: {estimateWalk(request.pickup_location, request.dropoff_location)}</span>
+          </div>
+
           <dl className="mt-4 grid grid-cols-1 gap-3 text-sm sm:grid-cols-2">
             <div>
               <dt className="font-medium text-slate-500">Pickup</dt>
@@ -259,7 +301,7 @@ export default function RequestDetailPage() {
             {request.reward_suggestion != null && (
               <div>
                 <dt className="font-medium text-slate-500">Suggested reward</dt>
-                <dd className="text-slate-900">৳{request.reward_suggestion}</dd>
+                <dd className="text-slate-900 font-extrabold text-emerald-800">৳{request.reward_suggestion}</dd>
               </div>
             )}
             {request.deliverer_id && (

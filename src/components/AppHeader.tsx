@@ -35,7 +35,6 @@ export default function AppHeader() {
             <nav aria-label="Main Navigation" className="flex items-center gap-1">
               <Link
                 to="/requests"
-                aria-label="Browse open requests"
                 className={`inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-semibold transition-colors ${
                   location.pathname === '/requests'
                     ? 'bg-slate-100 text-slate-900'
@@ -47,7 +46,6 @@ export default function AppHeader() {
               </Link>
               <Link
                 to="/requests/new"
-                aria-label="Create new delivery request"
                 className="inline-flex items-center gap-1.5 rounded-lg bg-emerald-800 px-3 py-1.5 text-xs font-semibold text-white shadow-sm shadow-emerald-900/20 hover:bg-emerald-900 active:scale-95 transition-all"
               >
                 <PlusCircle className="h-3.5 w-3.5" />

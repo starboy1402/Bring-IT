@@ -9,7 +9,7 @@ export default function HomePage() {
   return (
     <div className="min-h-screen bg-slate-50/50">
       <AppHeader />
-      <main className="mx-auto max-w-4xl px-4 py-8 sm:px-6">
+      <main className="mx-auto max-w-4xl px-4 py-8 sm:px-6 pb-24">
         {/* Student Welcome & Campus Status Banner */}
         <section aria-labelledby="welcome-heading" className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-slate-900 via-slate-800 to-emerald-950 p-6 text-white shadow-xl sm:p-8">
           <div className="relative z-10 max-w-2xl">
