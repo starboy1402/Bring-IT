@@ -50,6 +50,15 @@ jobs:
     - name: Build project
       run: npm run build
 
+    - name: Typecheck
+      run: npx tsc --noEmit
+
+    - name: Install Playwright browsers
+      run: npx playwright install chromium
+
+    - name: Run E2E tests
+      run: npx playwright test
+
     - name: Secret Scan
       run: |
         if grep -rq "service_role" dist/; then

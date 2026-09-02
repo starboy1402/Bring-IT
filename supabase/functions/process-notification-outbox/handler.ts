@@ -10,7 +10,7 @@ interface OutboxRow {
 export type EnvGetter = (key: string) => string | undefined
 
 export interface NotificationDbClient {
-  rpc(fnName: string, params: Record<string, unknown>): Promise<{ data: unknown; error: { message: string } | null }>
+  rpc(fnName: string, params: Record<string, unknown>): Promise<{ data: unknown; error: { message: string } | null } | { data?: undefined; error: { message: string } | null }>
 }
 
 export async function handleRequest(req: Request, env: EnvGetter, fetcher: typeof fetch = fetch, dbClient?: NotificationDbClient): Promise<Response> {

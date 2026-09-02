@@ -1,5 +1,5 @@
-import { assertEquals } from 'jsr:@std/assert@0.224.0/assert_equals'
-import { assertStringIncludes } from 'jsr:@std/assert@0.224.0/assert_string_includes'
+import { assertEquals } from 'jsr:@std/assert@0.224.0/assert-equals'
+import { assertStringIncludes } from 'jsr:@std/assert@0.224.0/assert-string-includes'
 import { handleRequest, type EnvGetter } from './handler.ts'
 
 Deno.test('Edge Function: missing cron secret returns 500 CONFIG_ERROR', async () => {
