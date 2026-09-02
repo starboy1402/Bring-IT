@@ -15,8 +15,9 @@ export default defineConfig({
   retries: process.env.CI ? 2 : 0,
   workers: process.env.CI ? 1 : undefined,
   reporter: 'html',
+  repeatEach: 3,
   use: {
-    baseURL: 'http://localhost:5174',
+    baseURL: 'http://127.0.0.1:5173',
     trace: 'on-first-retry',
   },
   projects: [
@@ -25,5 +26,9 @@ export default defineConfig({
       use: { ...devices['Desktop Chrome'] },
     },
   ],
-  webServer: undefined, // we run dev server manually
+  webServer: {
+    command: 'npm run dev -- --host 127.0.0.1 --port 5173 --strictPort',
+    url: 'http://127.0.0.1:5173',
+    reuseExistingServer: !process.env.CI,
+  }
 });

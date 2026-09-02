@@ -1,3 +1,4 @@
+/// <reference types="node" />
 import { createClient, type SupabaseClient } from '@supabase/supabase-js'
 
 export const SUPABASE_URL = process.env.SUPABASE_URL as string

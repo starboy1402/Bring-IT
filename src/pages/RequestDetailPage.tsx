@@ -240,7 +240,7 @@ export default function RequestDetailPage() {
                   type="button"
                   disabled={busy}
                   onClick={() => void runAction(() => acceptRequest(id))}
-                  className="rounded-lg bg-emerald-600 px-4 py-2 text-sm font-medium text-white hover:bg-emerald-700 disabled:opacity-50"
+                  className="rounded-lg bg-emerald-800 px-4 py-2 text-sm font-medium text-white hover:bg-emerald-900 disabled:opacity-50"
                 >
                   Accept delivery
                 </button>
@@ -260,7 +260,7 @@ export default function RequestDetailPage() {
                   type="button"
                   disabled={busy}
                   onClick={() => void runAction(() => advanceRequest(id, 'delivered'))}
-                  className="rounded-lg bg-emerald-600 px-4 py-2 text-sm font-medium text-white hover:bg-emerald-700 disabled:opacity-50"
+                  className="rounded-lg bg-emerald-800 px-4 py-2 text-sm font-medium text-white hover:bg-emerald-900 disabled:opacity-50"
                 >
                   Mark delivered
                 </button>

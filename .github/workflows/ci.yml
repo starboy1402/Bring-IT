@@ -25,10 +25,21 @@ jobs:
     - name: Setup Supabase CLI
       uses: supabase/setup-cli@v1
       with:
-        version: latest
+        version: '1.162.4'
 
     - name: Start Supabase
-      run: npx supabase start
+      run: |
+        npx supabase start
+        npx supabase db reset
+        npx supabase status -o env >> $GITHUB_ENV
+
+    - name: Setup Deno
+      uses: denoland/setup-deno@v1
+      with:
+        deno-version: v1.x
+
+    - name: Run Deno tests
+      run: deno test --allow-env --allow-net supabase/functions/
 
     - name: Run lint
       run: npm run lint
@@ -41,12 +52,12 @@ jobs:
 
     - name: Secret Scan
       run: |
-        if grep -r "service_role" src/; then
+        if grep -rq "service_role" dist/; then
           echo "Error: service_role token found in client bundle!"
           exit 1
         fi
-        if grep -r "SUPABASE_SERVICE_KEY" src/; then
-          echo "Error: SUPABASE_SERVICE_KEY found in client bundle!"
+        if grep -rq "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Ij" dist/; then
+          echo "Error: hardcoded JWT found in client bundle!"
           exit 1
         fi
         echo "Secret scan passed."

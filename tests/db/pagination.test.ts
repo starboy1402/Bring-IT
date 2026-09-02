@@ -1,9 +1,10 @@
 import { beforeAll, describe, expect, it } from 'vitest'
 import {
-  createRequest,
+  createServiceClient,
   createTestUser,
   type TestUser,
 } from './helpers'
+import { listOpenRequests } from '../../src/lib/requests'
 
 describe('Keyset pagination for open requests (T-C2, MS-4)', () => {
   let alice: TestUser
@@ -13,49 +14,47 @@ describe('Keyset pagination for open requests (T-C2, MS-4)', () => {
   })
 
   it('paginates open requests correctly using keyset cursor', async () => {
-    // We can just use the service client from helpers to insert directly 
-    // to control the created_at precisely, but using createRequest is fine.
-    // Instead we can just create 3 requests and use listOpenRequests to paginate them.
-    for (let i = 0; i < 3; i++) {
-      await createRequest(alice)
-    }
+    const svc = createServiceClient()
+    // Use a future date to ensure these records appear at the very top of created_at DESC sort
+    // even if other tests are running concurrently
+    const now = new Date('2100-01-01T12:00:00Z').toISOString()
 
-    // Since listOpenRequests uses the imported supabase client, it runs as anon/authenticated.
-    // Wait, the client used in src/lib/requests.ts is initialized with the env vars. 
-    // The test environment for vitest usually sets up the client to use the anon key.
-    // We must authenticate the client so it can read via RLS.
-    // Actually, in `tests/db/helpers.ts`, `createTestUser` returns a client. 
-    // Let's use the authenticated client instead of the global one.
-    
-    // So let's write the query inline with the authenticated client to test RLS+pagination
-    const { data: firstPage } = await alice.client
-      .from('delivery_requests')
-      .select('*')
-      .eq('status', 'open')
-      .order('created_at', { ascending: false })
-      .order('id', { ascending: false })
-      .limit(2)
+    // Create 3 deterministic records with the exact SAME timestamp to test tie-break by ID
+    // We must use the service client to force `created_at` since it's default now()
+    const { data: inserts, error } = await svc.from('delivery_requests').insert([
+      { requester_id: alice.profileId, title: 'Request 1', pickup_location: 'Location A', dropoff_location: 'Location B', urgency: 'high', status: 'open', created_at: now },
+      { requester_id: alice.profileId, title: 'Request 2', pickup_location: 'Location A', dropoff_location: 'Location B', urgency: 'high', status: 'open', created_at: now },
+      { requester_id: alice.profileId, title: 'Request 3', pickup_location: 'Location A', dropoff_location: 'Location B', urgency: 'low', status: 'open', created_at: now },
+      { requester_id: alice.profileId, title: 'Request 4', pickup_location: 'Location A', dropoff_location: 'Location B', urgency: 'high', status: 'open', created_at: now },
+    ]).select('*')
+    expect(error).toBeNull()
 
-    expect(firstPage).toHaveLength(2)
-    const cursor = firstPage![1]
+    const highUrgency = inserts!.filter(r => r.urgency === 'high').sort((a, b) => (a.id > b.id ? -1 : 1))
 
-    let query = alice.client
-      .from('delivery_requests')
-      .select('*')
-      .eq('status', 'open')
-      .order('created_at', { ascending: false })
-      .order('id', { ascending: false })
-      .limit(2)
+    // Fetch first page
+    const page1 = (await listOpenRequests('high', undefined, 20, alice.client)).filter(r => r.requester_id === alice.profileId)
 
-    query = query.or(
-      `created_at.lt.${cursor.created_at},and(created_at.eq.${cursor.created_at},id.lt.${cursor.id})`
-    )
+    // Check descending ID tie-break (same created_at)
+    expect(page1[0].id).toBe(highUrgency[0].id)
+    expect(page1[1].id).toBe(highUrgency[1].id)
+    expect(page1[2].id).toBe(highUrgency[2].id)
 
-    const { data: secondPage } = await query
-    expect(secondPage?.length).toBeGreaterThanOrEqual(1)
-    
-    // Ensure no overlap
-    expect(secondPage![0].id).not.toBe(firstPage![0].id)
-    expect(secondPage![0].id).not.toBe(firstPage![1].id)
+    // Fetch next page using the 2nd record as cursor
+    const page2 = (await listOpenRequests('high', {
+      createdAt: page1[1].created_at,
+      id: page1[1].id
+    }, 20, alice.client)).filter(r => r.requester_id === alice.profileId)
+
+    // Should get the 3rd high urgency record
+    expect(page2.length).toBe(1)
+    expect(page2[0].id).toBe(highUrgency[2].id)
+
+    // Check no duplicates and no skipped records
+    const allIds = [...page1, ...page2].map(r => r.id)
+    expect(new Set(allIds).size).toBe(3) // all unique
+
+    const finalCursor = { createdAt: page2[0].created_at, id: page2[0].id }
+    const page3 = (await listOpenRequests('high', finalCursor, 20, alice.client)).filter(r => r.requester_id === alice.profileId)
+    expect(page3).toHaveLength(0) // hasMore = false test
   })
 })

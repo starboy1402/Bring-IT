@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import { Link } from 'react-router-dom'
 import { Card, StatusBadge, UrgencyBadge } from '../components/Badges'
 import { useAuth } from '../context/AuthContext'
@@ -22,40 +22,46 @@ export default function BrowseRequestsPage() {
   const [error, setError] = useState<string | null>(null)
   const [hasMore, setHasMore] = useState(false)
   const [loadingMore, setLoadingMore] = useState(false)
+  const [retryCount, setRetryCount] = useState(0)
+  const fetchId = useRef(0)
 
   useEffect(() => {
-    let cancelled = false
+    const currentFetch = ++fetchId.current
     listOpenRequests(urgency || undefined)
       .then((rows) => {
-        if (!cancelled) {
+        if (currentFetch === fetchId.current) {
           setRequests(rows)
           setHasMore(rows.length === 20)
         }
       })
       .catch((err: Error) => {
-        if (!cancelled) setError(err.message)
+        if (currentFetch === fetchId.current) setError(err.message)
       })
-    return () => {
-      cancelled = true
-    }
-  }, [urgency])
+  }, [urgency, retryCount])
 
   async function handleLoadMore() {
     if (!requests || requests.length === 0 || loadingMore) return
     setLoadingMore(true)
     setError(null)
+    const currentFetch = ++fetchId.current
     const last = requests[requests.length - 1]
     try {
       const more = await listOpenRequests(urgency || undefined, {
         createdAt: last.created_at,
         id: last.id,
       })
-      setRequests([...requests, ...more])
-      setHasMore(more.length === 20)
+      if (currentFetch === fetchId.current) {
+        setRequests([...requests, ...more])
+        setHasMore(more.length === 20)
+      }
     } catch (err) {
-      setError((err as Error).message)
+      if (currentFetch === fetchId.current) {
+        setError((err as Error).message)
+      }
     } finally {
-      setLoadingMore(false)
+      if (currentFetch === fetchId.current) {
+        setLoadingMore(false)
+      }
     }
   }
 
@@ -65,7 +71,7 @@ export default function BrowseRequestsPage() {
         <h1 className="text-2xl font-bold tracking-tight text-slate-900">Open requests</h1>
         <Link
           to="/requests/new"
-          className="rounded-lg bg-emerald-600 px-4 py-2 text-sm font-medium text-white hover:bg-emerald-700"
+          className="rounded-lg bg-emerald-800 px-4 py-2 text-sm font-medium text-white hover:bg-emerald-900"
         >
           New request
         </Link>
@@ -94,9 +100,20 @@ export default function BrowseRequestsPage() {
       </div>
 
       {error && (
-        <p role="alert" className="mt-4 rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700">
-          {error}
-        </p>
+        <div className="mt-4 flex items-center justify-between rounded-lg bg-red-50 px-4 py-3">
+          <p role="alert" className="text-sm text-red-700">
+            {error} <a href="mailto:support@bringit.com" className="underline hover:text-red-900 ml-1">Contact support</a>
+          </p>
+          <button
+            onClick={() => {
+              setError(null)
+              setRetryCount(c => c + 1)
+            }}
+            className="rounded-md bg-red-100 px-3 py-1.5 text-sm font-medium text-red-800 hover:bg-red-200"
+          >
+            Retry
+          </button>
+        </div>
       )}
 
       {requests === null && !error && (
@@ -113,7 +130,7 @@ export default function BrowseRequestsPage() {
           </p>
           <Link
             to="/requests/new"
-            className="mt-4 inline-block rounded-lg bg-emerald-600 px-4 py-2 text-sm font-medium text-white hover:bg-emerald-700"
+            className="mt-4 inline-block rounded-lg bg-emerald-800 px-4 py-2 text-sm font-medium text-white hover:bg-emerald-900"
           >
             Create a request
           </Link>

@@ -19,6 +19,10 @@
 | Q10 **[APPROVAL]** | Should public rating averages be exposed in MVP, or kept participant-only? | Affects `03` §9, `04` §6.5, MS-10. | Keep participant-only for MVP (Option A). If later approved, use SECURITY DEFINER function with minimum-count privacy. | **Blocks production launch** |
 | Q11 **[APPROVAL]** | What is the exact initial admin provisioning process, and who can grant/revoke admin access in production? | Affects MS-13, `04` §6.9. | Project owner seeds initial admins via migration; later grants via dedicated admin RPC (not in MVP). | **Blocks production launch** |
 | Q12 **[APPROVAL]** | What is the completion confirmation model — how does the requester confirm delivery was received correctly? | Affects MS-9 trust and future proof-of-delivery features. | MVP: deliverer marks `delivered`; requester is prompted to rate (soft confirmation). Explicit "confirm received" UI is a safe default MVP behavior if desired. Proof-of-delivery photos and signed confirmation deferred. | **Can safely remain deferred** (default: deliverer marks complete; rating acts as soft confirmation) |
+| RR1 **[APPROVAL]** | **Edge Functions & Trigger vs Cron**. Should we explicitly confirm the architectural decision to use cron over pg_net? | Affects background processing predictability. | Confirm Deno Edge Function with pg_cron. | **Blocks production launch** |
+| RR2 **[APPROVAL]** | **Secrets & Webhooks**. Are there specific requirements for production webhook URL resolution and credential storage? | Affects webhook security in production. | Vault or config bindings. | **Blocks production launch** |
+| RR3 **[APPROVAL]** | **Production Scheduler**. Should we document a clear fallback or state the production tier prerequisite since pg_cron is not available locally? | Affects operational readiness. | Document local explicit scheduler substitute and production Supabase provisioning. | **Blocks production launch** |
+| RR4 **[APPROVAL]** | **Delivery Contact**. Does the frontend need to use `get_delivery_contact` to reveal phone numbers during `in_progress` state? | Affects frontend completion of MS-13. | Document deferral if not used by MVP frontend. | **Can safely remain deferred** |
 
 ### Launch-block classification
 
@@ -132,18 +136,12 @@
 
 Pending human review:
 - [ ] Q1-Q12 approvals resolved (4 implementation + 2 staging + 3 production + 3 deferred)
-- [x] Every open launch blocker tagged with level (blocks implementation/staging/production/deferred)
-- [x] Deferred features not returned to MVP
-- [x] File count correct: 19 files total (11 planning + 8 ADR)
-- [x] Idempotency contracts internally consistent
-- [x] MS-13 traced through schema, API, roadmap, tests, milestone definition
-- [x] Phone/location privacy has implementable enforcement
-- [x] Report resolution and notification are complete
-- [x] Auth/profile/verification lifecycle defined and consistent
+- [x] No duplicate Q identifiers (Q1–Q12, RR1-RR4 unique)
+- [ ] Q1-Q12 and RR1-RR4 approvals resolved (4 implementation + 2 staging + 6 production + 4 deferred)
 
 ## 6. Cross-references
 
-- Decisions pending approval feed ADRs: ADR-0003 (Q1), ADR-0002 (deps), ADR-0004 (cancel rules), ADR-0005 (realtime), ADR-0006 (matching), ADR-0007 (reputation).
+- **Decisions pending approval** feed ADRs: ADR-0003 (Q1), ADR-0002 (deps), ADR-0004 (cancel rules), ADR-0005 (realtime), ADR-0006 (matching), ADR-0007 (reputation), ADR-0008 (RR1-RR3).
 - Retention: `03-data-model.md` §8.
 - Verification: `../adr/0003-authentication-and-student-verification.md`.
 - Admin model: `03-data-model.md` §3.7, `04-security-and-threat-model.md` §6.9.

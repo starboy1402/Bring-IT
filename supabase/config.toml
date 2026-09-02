@@ -40,6 +40,9 @@ health_timeout = "2m"
 # server_version;` on the remote database to check.
 major_version = 17
 
+[db.settings]
+custom_db_config = { "app.settings.edge_function_url" = "http://supabase-kong:8000/functions/v1/process-notification-outbox", "app.settings.notification_cron_secret" = "test-cron-secret-123" }
+
 [db.pooler]
 enabled = false
 # Port to use for the local connection pooler.

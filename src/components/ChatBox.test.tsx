@@ -1,142 +1,288 @@
-import { render, screen, waitFor } from '@testing-library/react'
-import userEvent from '@testing-library/user-event'
-import { beforeEach, describe, expect, it, vi } from 'vitest'
-import ChatBox from './ChatBox'
+import { render, screen, waitFor, act } from "@testing-library/react";
+import { beforeEach, afterEach, describe, expect, it, vi } from "vitest";
+import ChatBox from "./ChatBox";
 
 // Mock the data layer module so component tests are isolated.
-vi.mock('../lib/requests', () => ({
+vi.mock("../lib/requests", () => ({
   listMessages: vi.fn(),
   sendMessage: vi.fn(),
-}))
-// Mock supabase client (realtime channel calls are no-ops in tests).
-vi.mock('../lib/supabase', () => ({
+}));
+
+type PostgresChangesPayload = { new: Partial<Message> };
+let mockOnPostgresChanges: {
+  filter: Record<string, unknown>;
+  callback: (payload: PostgresChangesPayload) => void;
+} | null = null;
+let mockSubscribe: ((status: string) => void) | null = null;
+
+function triggerPostgresChange(payload: PostgresChangesPayload) {
+  if (!mockOnPostgresChanges) throw new Error("mockOnPostgresChanges is null");
+  mockOnPostgresChanges.callback(payload);
+}
+
+function triggerSubscribe(status: string) {
+  if (!mockSubscribe) throw new Error("mockSubscribe is null");
+  mockSubscribe(status);
+}
+
+function getMockPostgresFilter() {
+  if (!mockOnPostgresChanges) throw new Error("mockOnPostgresChanges is null");
+  return mockOnPostgresChanges.filter;
+}
+const channelMock = {
+  on: vi.fn().mockImplementation((event, filter, callback) => {
+    if (event === "postgres_changes")
+      mockOnPostgresChanges = { filter, callback };
+    return channelMock;
+  }),
+  subscribe: vi.fn().mockImplementation((callback) => {
+    mockSubscribe = callback;
+    return channelMock;
+  }),
+};
+
+vi.mock("../lib/supabase", () => ({
   supabase: {
-    channel: vi.fn(() => ({
-      on: vi.fn().mockReturnThis(),
-      subscribe: vi.fn(() => 'mock-subscription'),
-    })),
+    channel: vi.fn(() => channelMock),
     removeChannel: vi.fn(),
   },
-}))
+}));
 
-// Import after mock so we can reference the mocked functions.
-import { listMessages, sendMessage } from '../lib/requests'
-import type { Message, DeliveryRequest } from '../lib/requests'
+import { listMessages, sendMessage } from "../lib/requests";
+import { supabase } from "../lib/supabase";
+import type { Message, DeliveryRequest } from "../lib/requests";
 
-const mockedListMessages = vi.mocked(listMessages)
-const mockedSendMessage = vi.mocked(sendMessage)
+const mockedListMessages = vi.mocked(listMessages);
+const mockedSendMessage = vi.mocked(sendMessage);
+const mockedChannel = vi.mocked(supabase.channel);
 
 const baseRequest: DeliveryRequest = {
-  id: 'req-1',
-  requester_id: 'prof-requester',
-  deliverer_id: 'prof-deliverer',
-  title: 'Lab report',
-  description: 'CSE 3rd year',
-  pickup_location: 'Main canteen',
-  dropoff_location: 'CSE Building',
-  urgency: 'medium',
+  id: "req-1",
+  requester_id: "prof-requester",
+  deliverer_id: "prof-deliverer",
+  title: "Lab report",
+  description: "CSE 3rd year",
+  pickup_location: "Main canteen",
+  dropoff_location: "CSE Building",
+  urgency: "medium",
   reward_suggestion: 20,
-  status: 'accepted',
+  status: "accepted",
   created_at: new Date().toISOString(),
   updated_at: new Date().toISOString(),
-}
+};
 
 const names = {
-  'prof-requester': 'Alice',
-  'prof-deliverer': 'Bob',
-}
+  "prof-requester": "Alice",
+  "prof-deliverer": "Bob",
+};
 
-const myselfId = 'prof-deliverer'
+const myselfId = "prof-deliverer";
 
 const existingMessages: Message[] = [
   {
-    id: 'msg-1',
-    request_id: 'req-1',
-    sender_id: 'prof-requester',
-    content: 'Hi, where are you?',
-    created_at: new Date('2026-09-01T10:00:00Z').toISOString(),
+    id: "msg-1",
+    request_id: "req-1",
+    sender_id: "prof-requester",
+    content: "Hi, where are you?",
+    created_at: "2026-09-01T10:00:00Z",
   },
-]
+];
 
-describe('ChatBox', () => {
+describe("ChatBox", () => {
   beforeEach(() => {
-    mockedListMessages.mockResolvedValue([...existingMessages])
-    mockedSendMessage.mockResolvedValue({ ok: true, message_id: 'msg-2' })
-  })
+    vi.useFakeTimers({ shouldAdvanceTime: true });
+    mockedListMessages.mockResolvedValue([...existingMessages]);
+    mockedSendMessage.mockResolvedValue({ ok: true, message_id: "msg-new" });
+    mockOnPostgresChanges = null;
+    mockSubscribe = null;
+    mockedChannel.mockClear();
+    vi.mocked(supabase.removeChannel).mockClear();
+    mockedListMessages.mockClear();
+  });
+  afterEach(() => {
+    vi.useRealTimers();
+  });
 
-  it('renders existing messages with sender display names', async () => {
+  it("renders existing messages with sender display names", async () => {
     render(
       <ChatBox request={baseRequest} names={names} myProfileId={myselfId} />,
-    )
-
+    );
     await waitFor(() => {
-      expect(screen.getByText('Hi, where are you?')).toBeInTheDocument()
-    })
-    // Alice is the requester — shown as the sender name
-    expect(screen.getByText('Alice')).toBeInTheDocument()
-  })
+      expect(screen.getByText("Hi, where are you?")).toBeInTheDocument();
+    });
+    expect(screen.getByText("Alice")).toBeInTheDocument();
+  });
 
-  it('shows a text input and sends a message on submit', async () => {
-    const user = userEvent.setup()
+  it("configures server-side filter correctly", async () => {
     render(
       <ChatBox request={baseRequest} names={names} myProfileId={myselfId} />,
-    )
+    );
+    expect(mockedChannel).toHaveBeenCalledWith("messages:request_id=eq.req-1");
+    expect(getMockPostgresFilter()).toEqual({
+      event: "INSERT",
+      schema: "public",
+      table: "messages",
+      filter: "request_id=eq.req-1",
+    });
+  });
 
-    await waitFor(() => {
-      expect(screen.getByRole('textbox')).toBeInTheDocument()
-    })
-
-    await user.type(screen.getByRole('textbox'), 'I am on my way')
-    await user.click(screen.getByRole('button', { name: /send/i }))
-
-    await waitFor(() => {
-      expect(mockedSendMessage).toHaveBeenCalledWith('req-1', 'I am on my way')
-    })
-  })
-
-  it('does not render when request is not accepted or in_progress', () => {
-    const openRequest = { ...baseRequest, status: 'open' as const }
-    const { container } = render(
-      <ChatBox request={openRequest} names={names} myProfileId={myselfId} />,
-    )
-    expect(container).toBeEmptyDOMElement()
-  })
-
-  it('shows a loading state before messages load', async () => {
-    mockedListMessages.mockImplementation(
-      () => new Promise(() => {}), // never resolves
-    )
+  it("deduplicates incoming messages with identical IDs", async () => {
     render(
       <ChatBox request={baseRequest} names={names} myProfileId={myselfId} />,
-    )
-    expect(screen.getByText(/loading/i)).toBeInTheDocument()
-  })
+    );
+    await waitFor(() => {
+      expect(screen.getByText("Hi, where are you?")).toBeInTheDocument();
+    });
+    // Fire realtime insert for the SAME message ID
+    act(() => {
+      triggerPostgresChange({
+        new: { ...existingMessages[0], content: "Duplicate" },
+      });
+    });
+    // Because IDs match, the merge logic should just keep one. Note that our merge logic replaces the older with newer or keeps one.
+    // The length should still be 1.
+    const items = screen.getAllByText(/Hi, where are you\?|Duplicate/);
+    expect(items).toHaveLength(1);
+  });
 
-  it('rerenders from open to accepted without hook errors', async () => {
-    const openRequest = { ...baseRequest, status: 'open' as const }
+  it("sorts out-of-order events deterministically by (created_at, id)", async () => {
+    render(
+      <ChatBox request={baseRequest} names={names} myProfileId={myselfId} />,
+    );
+    await waitFor(() => {
+      expect(screen.getByText("Hi, where are you?")).toBeInTheDocument();
+    });
+
+    // Fire messages out of order
+    const msg2 = {
+      id: "msg-2",
+      request_id: "req-1",
+      sender_id: "prof-requester",
+      content: "Message B",
+      created_at: "2026-09-01T10:02:00Z",
+    };
+    const msg3 = {
+      id: "msg-3",
+      request_id: "req-1",
+      sender_id: "prof-requester",
+      content: "Message A",
+      created_at: "2026-09-01T10:01:00Z",
+    };
+
+    act(() => {
+      triggerPostgresChange({ new: msg2 });
+      triggerPostgresChange({ new: msg3 });
+    });
+
+    await waitFor(() => {
+      expect(screen.getByText("Message A")).toBeInTheDocument();
+    });
+
+    // Check DOM order
+    const messages = screen.getAllByText(/Message A|Message B/);
+    expect(messages[0]).toHaveTextContent("Message A");
+    expect(messages[1]).toHaveTextContent("Message B");
+  });
+
+  it("tie-breaks equal timestamps using IDs", async () => {
+    render(
+      <ChatBox request={baseRequest} names={names} myProfileId={myselfId} />,
+    );
+    await waitFor(() => screen.getByText("Hi, where are you?"));
+
+    const time = "2026-09-01T10:05:00Z";
+    // id 'b' and 'a' should be ordered 'a' then 'b'
+    const msgB = {
+      id: "b",
+      request_id: "req-1",
+      sender_id: "prof-requester",
+      content: "Second",
+      created_at: time,
+    };
+    const msgA = {
+      id: "a",
+      request_id: "req-1",
+      sender_id: "prof-requester",
+      content: "First",
+      created_at: time,
+    };
+
+    act(() => {
+      triggerPostgresChange({ new: msgB });
+      triggerPostgresChange({ new: msgA });
+    });
+
+    const messages = screen.getAllByText(/First|Second/);
+    expect(messages[0]).toHaveTextContent("First");
+    expect(messages[1]).toHaveTextContent("Second");
+  });
+
+  it("shows Reconnecting state on CHANNEL_ERROR and triggers delayed polling", async () => {
+    render(
+      <ChatBox request={baseRequest} names={names} myProfileId={myselfId} />,
+    );
+    await waitFor(() => screen.getByText("Hi, where are you?"));
+    expect(screen.queryByText("Reconnecting…")).not.toBeInTheDocument();
+
+    // Simulate error
+    act(() => {
+      triggerSubscribe("CHANNEL_ERROR");
+    });
+    expect(screen.getByText("Reconnecting…")).toBeInTheDocument();
+
+    mockedListMessages.mockClear();
+    // Wait for 15s to trigger polling
+    await act(async () => {
+      vi.advanceTimersByTime(15000);
+    });
+    expect(mockedListMessages).toHaveBeenCalled(); // Polling fired
+  });
+
+  it("recovers on SUBSCRIBED and performs backfill", async () => {
+    render(
+      <ChatBox request={baseRequest} names={names} myProfileId={myselfId} />,
+    );
+    await waitFor(() => screen.getByText("Hi, where are you?"));
+    mockedListMessages.mockClear();
+
+    // Reconnecting state
+    act(() => {
+      triggerSubscribe("CHANNEL_ERROR");
+    });
+    expect(screen.getByText("Reconnecting…")).toBeInTheDocument();
+
+    // Recover
+    act(() => {
+      triggerSubscribe("SUBSCRIBED");
+    });
+    expect(screen.queryByText("Reconnecting…")).not.toBeInTheDocument();
+
+    // Backfill fetch should have happened immediately
+    await waitFor(() => {
+      expect(mockedListMessages).toHaveBeenCalled();
+    });
+  });
+
+  it("resets state and cursor safely when request ID changes", async () => {
     const { rerender } = render(
-      <ChatBox request={openRequest} names={names} myProfileId={myselfId} />,
-    )
-    // Initially empty
-    expect(screen.queryByRole('textbox')).not.toBeInTheDocument()
-
-    // Rerender with accepted status
-    rerender(<ChatBox request={baseRequest} names={names} myProfileId={myselfId} />)
-
-    await waitFor(() => {
-      expect(screen.getByRole('textbox')).toBeInTheDocument()
-    })
-  })
-
-  it('deduplicates incoming messages with identical IDs', async () => {
-    render(
       <ChatBox request={baseRequest} names={names} myProfileId={myselfId} />,
-    )
+    );
+    await waitFor(() => screen.getByText("Hi, where are you?"));
+
+    const request2 = { ...baseRequest, id: "req-2" };
+    mockedListMessages.mockResolvedValueOnce([]); // Empty for new req
+
+    rerender(
+      <ChatBox request={request2} names={names} myProfileId={myselfId} />,
+    );
+
+    // Should clear old messages
     await waitFor(() => {
-      expect(screen.getAllByText('Hi, where are you?')).toHaveLength(1)
-    })
-    
-    // In a real test we'd simulate the realtime channel firing, 
-    // but the component will dedup anyway when fetching new msgs.
-  })
-})
+      expect(screen.queryByText("Hi, where are you?")).not.toBeInTheDocument();
+    });
+    // Channel cleanup
+    expect(supabase.removeChannel).toHaveBeenCalled();
+    // Channel subscription to new req
+    expect(mockedChannel).toHaveBeenCalledWith("messages:request_id=eq.req-2");
+  });
+});

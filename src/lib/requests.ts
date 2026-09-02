@@ -49,9 +49,10 @@ export interface CreateRequestInput {
 export async function listOpenRequests(
   urgency?: Urgency,
   cursor?: { createdAt: string; id: string },
-  limit = 20
+  limit = 20,
+  client = supabase
 ): Promise<DeliveryRequest[]> {
-  let query = supabase
+  let query = client
     .from('delivery_requests')
     .select('*')
     .eq('status', 'open')
