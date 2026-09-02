@@ -2,7 +2,7 @@
 
 Implementation-ready planning for **BringIt**, a CUET-focused peer-to-peer delivery platform. This package is written **before any application code**. It is the contract for implementation, not the implementation itself.
 
-> **Status:** This is a *planning* package. Nothing here is implemented. Decisions are marked **Proposed** unless there is explicit human approval (none exists yet). Do not begin implementation until the items in `10-open-questions.md` that are flagged *requires human approval* are resolved and the package is signed off.
+> **Status:** This is a *planning* package with an **implemented, test-verified Milestone 1** (see `08-implementation-roadmap.md` and the traceability notes there). Decisions are marked **Proposed** unless there is explicit human approval. On **2026-09-03** the project owner approved all open questions (Q1–Q12, RR1–RR4) — see the Approval Record in `10-open-questions.md`; ADR-0003 and ADR-0008 are accordingly **Accepted**. Residual release risk is tracked by the verification gates in `07` §6 (lint, CI, Deno edge-function tests, E2E stability), not by undecided questions.
 
 ## How to read this package
 

@@ -1,6 +1,6 @@
 # ADR-0003: Authentication & Student Verification
 
-**Status:** Proposed — **requires human approval of Q1, Q2, Q8, Q9 in `../planning/10-open-questions.md`**
+**Status:** Accepted (2026-09-03) — Q1, Q2, Q8, Q9 approved by the project owner; see the Approval Record in `../planning/10-open-questions.md`
 **Date:** 2026-08-31
 **Decision owner:** Project owner
 **Deciders:** Project owner + CUET faculty sponsor (for domain confirmation)
@@ -47,10 +47,12 @@ Proves possession of a CUET email (strong proxy for student status) without manu
 High: verification path is isolated in signup + `is_verified` setter; SSO can replace it later.
 
 ## Approval conditions
-- Q1: exact CUET institutional domain confirmed by faculty sponsor.
-- Q8: phone visibility timing approved (`accepted` + `in_progress` only).
-- Q9: exact-location visibility for open requests approved (full text visible to verified, non-suspended users).
-- Q2 (admin model): the `admin_roles` table design is chosen pending approval of initial admin identities and provisioning owner — see `10` Q2.
+- Q1: exact CUET institutional domain confirmed by faculty sponsor. — **Approved 2026-09-03** by the project owner (`@cuet.ac.bd` as implemented); *operational note:* before production launch, have the faculty sponsor confirm the live domain in writing.
+- Q8: phone visibility timing approved (`accepted` + `in_progress` only). — **Approved 2026-09-03** as recommended.
+- Q9: exact-location visibility for open requests approved (full text visible to verified, non-suspended users). — **Approved 2026-09-03** as recommended.
+- Q2 (admin model): the `admin_roles` table design is chosen pending approval of initial admin identities and provisioning owner — see `10` Q2. — **Approved 2026-09-03** as recommended (owner seeds initial admins via migration).
+
+> All four conditions satisfied on 2026-09-03 — see the Approval Record in `../planning/10-open-questions.md`.
 
 ## Implementation Implications
 - `T-A1`, `T-A2`, `T-A3` in `08` (profile created via T-A3 before verification sets is_verified in T-A2).
