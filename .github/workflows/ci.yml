@@ -1,0 +1,52 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+        cache: 'npm'
+
+    - name: Install dependencies
+      run: npm ci
+
+    - name: Setup Supabase CLI
+      uses: supabase/setup-cli@v1
+      with:
+        version: latest
+
+    - name: Start Supabase
+      run: npx supabase start
+
+    - name: Run lint
+      run: npm run lint
+
+    - name: Run unit tests
+      run: npx vitest run
+
+    - name: Build project
+      run: npm run build
+
+    - name: Secret Scan
+      run: |
+        if grep -r "service_role" src/; then
+          echo "Error: service_role token found in client bundle!"
+          exit 1
+        fi
+        if grep -r "SUPABASE_SERVICE_KEY" src/; then
+          echo "Error: SUPABASE_SERVICE_KEY found in client bundle!"
+          exit 1
+        fi
+        echo "Secret scan passed."
