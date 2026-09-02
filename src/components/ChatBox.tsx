@@ -137,6 +137,10 @@ export default function ChatBox({ request, names, myProfileId }: ChatBoxProps) {
       const res = await sendMessage(request.id, content.trim())
       if (res.ok) {
         setContent('')
+        void fetchAndMerge({ current: true })
+      } else {
+        console.error('Send message failed:', res)
+        alert('Failed to send message: ' + (res.message || 'Unknown error'))
       }
     } finally {
       setSending(false)
