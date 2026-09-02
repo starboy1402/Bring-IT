@@ -1,0 +1,62 @@
+{
+  "version": "5",
+  "specifiers": {
+    "jsr:@std/assert@0.224.0": "0.224.0",
+    "jsr:@std/fmt@0.224": "0.224.0",
+    "jsr:@std/internal@0.224": "0.224.0"
+  },
+  "jsr": {
+    "@std/assert@0.224.0": {
+      "integrity": "8643233ec7aec38a940a8264a6e3eed9bfa44e7a71cc6b3c8874213ff401967f",
+      "dependencies": [
+        "jsr:@std/fmt",
+        "jsr:@std/internal"
+      ]
+    },
+    "@std/fmt@0.224.0": {
+      "integrity": "e20e9a2312a8b5393272c26191c0a68eda8d2c4b08b046bad1673148f1d69851"
+    },
+    "@std/internal@0.224.0": {
+      "integrity": "afc50644f9cdf4495eeb80523a8f6d27226b4b36c45c7c195dfccad4b8509291",
+      "dependencies": [
+        "jsr:@std/fmt"
+      ]
+    }
+  },
+  "workspace": {
+    "packageJson": {
+      "dependencies": [
+        "npm:@axe-core/playwright@^4.13.0",
+        "npm:@eslint/js@^10.0.1",
+        "npm:@playwright/test@^1.62.1",
+        "npm:@supabase/supabase-js@^2.112.4",
+        "npm:@tailwindcss/vite@^4.3.3",
+        "npm:@testing-library/jest-dom@^7.0.1",
+        "npm:@testing-library/react@^16.3.3",
+        "npm:@testing-library/user-event@^14.6.6",
+        "npm:@types/node@^24.13.3",
+        "npm:@types/react-dom@^19.2.4",
+        "npm:@types/react@^19.2.18",
+        "npm:@vitejs/plugin-react@^6.1.0",
+        "npm:clsx@^2.1.1",
+        "npm:dotenv@^17.4.2",
+        "npm:eslint-plugin-react-hooks@^7.1.1",
+        "npm:eslint-plugin-react-refresh@~0.5.4",
+        "npm:eslint@^10.9.0",
+        "npm:globals@^17.11.0",
+        "npm:jsdom@^30.0.1",
+        "npm:lucide-react@^1.38.0",
+        "npm:react-dom@^19.2.8",
+        "npm:react-router-dom@^7.18.3",
+        "npm:react@^19.2.8",
+        "npm:tailwind-merge@^3.6.0",
+        "npm:tailwindcss@^4.3.3",
+        "npm:typescript-eslint@^8.67.0",
+        "npm:typescript@~6.0.2",
+        "npm:vite@^8.2.2",
+        "npm:vitest@^4.1.11",
+        "npm:zod@^4.5.4"
+      ]
+    }
+  }
+}

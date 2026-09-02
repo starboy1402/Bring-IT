@@ -36,7 +36,6 @@ export default function RequestDetailPage() {
   const { id = '' } = useParams()
   const { profile } = useAuth()
 
-  const [prevId, setPrevId] = useState(id)
   const [request, setRequest] = useState<DeliveryRequest | null>(null)
   const [names, setNames] = useState<Record<string, string>>({})
   const [events, setEvents] = useState<StatusEvent[]>([])
@@ -44,15 +43,6 @@ export default function RequestDetailPage() {
   const [notFound, setNotFound] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [busy, setBusy] = useState(false)
-
-  if (id !== prevId) {
-    setPrevId(id)
-    setLoading(true)
-    setNotFound(false)
-    setError(null)
-    setRequest(null)
-    setEvents([])
-  }
 
   const fetchRequestData = useCallback(async () => {
     const [req, evts] = await Promise.all([getRequest(id), getStatusHistory(id)])

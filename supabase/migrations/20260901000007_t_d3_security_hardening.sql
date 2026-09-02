@@ -273,7 +273,7 @@ BEGIN
     RETURN public.rpc_error('VALIDATION_ERROR', 'Comment must be at most 500 characters.');
   END IF;
 
-  SELECT * INTO v_request FROM public.delivery_requests WHERE id = p_request_id;
+  SELECT * INTO v_request FROM public.delivery_requests WHERE id = p_request_id FOR UPDATE;
   IF NOT FOUND THEN
     RETURN public.rpc_error('DELIVERY_NOT_FOUND', 'Request not found.');
   END IF;
