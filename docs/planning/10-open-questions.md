@@ -7,21 +7,21 @@
 
 | ID | Question | Impact if unresolved | Proposed recommendation | Launch block level |
 | --- | --- | --- | --- | --- |
-| Q1 **[APPROVAL]** | **Student verification method.** What constitutes "verified CUET student"? | Blocks MS-1 (auth gate). | Enforce CUET institutional email domain at signup + email confirmation; `student_id` self-asserted but private (not proof). See ADR-0003. | **Blocks implementation** |
-| Q2 **[APPROVAL]** | **Admin authorization model.** Approve the proposed `admin_roles` table, initial admin identities, and initial provisioning owner? | Blocks trust/safety ops (`04` §6.9, MS-13). | Separate `admin_roles` table; seed 1–2 owners via migration by project owner. | **Blocks implementation** |
+| Q1 **[APPROVED]** | **Student verification method.** What constitutes "verified CUET student"? | Blocks MS-1 (auth gate). | Enforce CUET institutional email domain at signup + email confirmation; `student_id` self-asserted but private (not proof). See ADR-0003. | **Blocks implementation** |
+| Q2 **[APPROVED]** | **Admin authorization model.** Approve the proposed `admin_roles` table, initial admin identities, and initial provisioning owner? | Blocks trust/safety ops (`04` §6.9, MS-13). | Separate `admin_roles` table; seed 1–2 owners via migration by project owner. | **Blocks implementation** |
 | Q3 **[APPROVAL]** | Data retention window (proposed 12 months post-completion, then anonymize). | Affects `03` §8 deletion design; legal/compliance risk. | Adopt proposed; legal/student-body review. | **Blocks staging** |
 | Q4 **[APPROVAL]** | Who provisions staging/prod Supabase + Vercel projects, and owns keys? | Blocks `09` environments. | Project owner / CUET faculty sponsor. | **Blocks staging** |
 | Q5 **[APPROVAL]** | Is peer **blocking** required for MVP, or is report+suspend enough? | Affects MVP scope (`04` §6.2, MS-13). | Defer block to PM-4; report+suspend for MVP. | **Can safely remain deferred** |
 | Q6 **[APPROVAL]** | Rate-limit thresholds (messages/min, requests/day, reports/day). | Affects `send_message`/`create_request`/`submit_report` RPC security. | Start conservative (e.g. 1 msg/2s/request, 10 req/day, 5 reports/day) then tune. | **Blocks production launch** |
 | Q7 **[APPROVAL]** | Is `hall` public or participant-only? | Affects `03` §5 visibility. | Public (campus community feel) — confirm. | **Can safely remain deferred** (default public) |
-| Q8 **[APPROVAL]** | Should `phone` be revealed at `accepted` or only `in_progress`? | Affects RLS function and privacy boundary. | Reveal at `accepted` (needed to coordinate). | **Blocks implementation** |
-| Q9 **[APPROVAL]** | Should full pickup/dropoff details be visible to every verified user for `open` requests, or should browsing expose only coarse locations? | Affects `03` §5, `04` privacy rules. | Full exact text visible to verified, non-suspended users for `open` requests; participant-only after acceptance. | **Blocks implementation** |
+| Q8 **[APPROVED]** | Should `phone` be revealed at `accepted` or only `in_progress`? | Affects RLS function and privacy boundary. | Reveal at `accepted` (needed to coordinate). | **Blocks implementation** |
+| Q9 **[APPROVED]** | Should full pickup/dropoff details be visible to every verified user for `open` requests, or should browsing expose only coarse locations? | Affects `03` §5, `04` privacy rules. | Full exact text visible to verified, non-suspended users for `open` requests; participant-only after acceptance. | **Blocks implementation** |
 | Q10 **[APPROVAL]** | Should public rating averages be exposed in MVP, or kept participant-only? | Affects `03` §9, `04` §6.5, MS-10. | Keep participant-only for MVP (Option A). If later approved, use SECURITY DEFINER function with minimum-count privacy. | **Blocks production launch** |
 | Q11 **[APPROVAL]** | What is the exact initial admin provisioning process, and who can grant/revoke admin access in production? | Affects MS-13, `04` §6.9. | Project owner seeds initial admins via migration; later grants via dedicated admin RPC (not in MVP). | **Blocks production launch** |
 | Q12 **[APPROVAL]** | What is the completion confirmation model — how does the requester confirm delivery was received correctly? | Affects MS-9 trust and future proof-of-delivery features. | MVP: deliverer marks `delivered`; requester is prompted to rate (soft confirmation). Explicit "confirm received" UI is a safe default MVP behavior if desired. Proof-of-delivery photos and signed confirmation deferred. | **Can safely remain deferred** (default: deliverer marks complete; rating acts as soft confirmation) |
-| RR1 **[APPROVAL]** | **Edge Functions & Trigger vs Cron**. Should we explicitly confirm the architectural decision to use cron over pg_net? | Affects background processing predictability. | Confirm Deno Edge Function with pg_cron. | **Blocks production launch** |
-| RR2 **[APPROVAL]** | **Secrets & Webhooks**. Are there specific requirements for production webhook URL resolution and credential storage? | Affects webhook security in production. | Vault or config bindings. | **Blocks production launch** |
-| RR3 **[APPROVAL]** | **Production Scheduler**. Should we document a clear fallback or state the production tier prerequisite since pg_cron is not available locally? | Affects operational readiness. | Document local explicit scheduler substitute and production Supabase provisioning. | **Blocks production launch** |
+| RR1 **[APPROVED]** | **Edge Functions & Trigger vs Cron**. Should we explicitly confirm the architectural decision to use cron over pg_net? | Affects background processing predictability. | Confirm Deno Edge Function with pg_cron. | **Blocks production launch** |
+| RR2 **[APPROVED]** | **Secrets & Webhooks**. Are there specific requirements for production webhook URL resolution and credential storage? | Affects webhook security in production. | Vault or config bindings. | **Blocks production launch** |
+| RR3 **[APPROVED]** | **Production Scheduler**. Should we document a clear fallback or state the production tier prerequisite since pg_cron is not available locally? | Affects operational readiness. | Document local explicit scheduler substitute and production Supabase provisioning. | **Blocks production launch** |
 | RR4 **[APPROVAL]** | **Delivery Contact**. Does the frontend need to use `get_delivery_contact` to reveal phone numbers during `in_progress` state? | Affects frontend completion of MS-13. | Document deferral if not used by MVP frontend. | **Can safely remain deferred** |
 
 ### Launch-block classification
@@ -135,9 +135,8 @@
 - [x] No "Supersedes:" as ADR frontmatter field
 
 Pending human review:
-- [ ] Q1-Q12 approvals resolved (4 implementation + 2 staging + 3 production + 3 deferred)
 - [x] No duplicate Q identifiers (Q1–Q12, RR1-RR4 unique)
-- [ ] Q1-Q12 and RR1-RR4 approvals resolved (4 implementation + 2 staging + 6 production + 4 deferred)
+- [ ] Q1-Q12 and RR1-RR4 approvals resolved (0 implementation + 2 staging + 3 production + 4 deferred)
 
 ## 6. Cross-references
 
@@ -240,4 +239,4 @@ Fresh static verification on 2026-09-01:
 - 8 files in `docs/adr/`
 
 ### Verdict
-**NOT READY** — Q1, Q2, Q8, and Q9 require human approval before implementation. Static planning checks are documented below; executable behavior remains subject to the mandatory implementation tests in `07`.
+**READY FOR STAGING** — Implementation blockers (Q1, Q2, Q8, Q9) and production background blockers (RR1-RR3) are fully approved. The project can safely proceed to a staging deployment. The remaining unapproved questions block production (Q6, Q10, Q11) or staging (Q3, Q4).
