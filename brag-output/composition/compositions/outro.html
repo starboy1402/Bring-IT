@@ -1,0 +1,88 @@
+<template>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap');
+  #root {
+    position: absolute; inset: 0;
+    background: linear-gradient(135deg, #0f172a 0%, #1e293b 40%, #064e3b 100%);
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    overflow: hidden;
+  }
+  .glow {
+    position: absolute; width: 600px; height: 600px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(16,185,129,0.3) 0%, transparent 70%);
+    filter: blur(80px); pointer-events: none;
+  }
+  .brand-row {
+    display: flex; align-items: center; gap: 18px; margin-bottom: 20px;
+  }
+  .logo-box {
+    width: 72px; height: 72px; border-radius: 22px;
+    background: linear-gradient(135deg, #10b981 0%, #047857 100%);
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 10px 25px -4px rgba(16, 185, 129, 0.4);
+  }
+  .logo-text {
+    font-size: 80px; font-weight: 800; color: #ffffff; letter-spacing: -0.03em;
+  }
+  .tagline {
+    font-size: 32px; font-weight: 700; color: #cbd5e1; text-align: center;
+    margin-bottom: 32px; letter-spacing: -0.01em;
+  }
+  .badge-pill {
+    display: inline-flex; align-items: center; gap: 10px;
+    background: rgba(16,185,129,0.15); border: 1.5px solid rgba(16,185,129,0.4);
+    border-radius: 9999px; padding: 10px 24px; color: #6ee7b7;
+    font-size: 15px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em;
+    margin-bottom: 24px;
+  }
+  .url-pill {
+    background: #ffffff; color: #0f172a; border-radius: 14px;
+    padding: 12px 28px; font-size: 20px; font-weight: 800;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+  }
+</style>
+<div id="root" data-composition-id="outro" data-width="1920" data-height="1080">
+  <div class="glow"></div>
+
+  <div id="brand-group" class="clip brand-row" data-start="0.02" data-duration="2.98">
+    <div class="logo-box">
+      <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M16.5 9.4 7.55 4.24a1.78 1.78 0 0 0-2.5 1.55v12.42a1.78 1.78 0 0 0 2.5 1.55L16.5 14.6a1.78 1.78 0 0 0 0-3.1z"></path>
+        <polyline points="3.29 7 12 12 20.71 7"></polyline>
+        <line x1="12" y1="22" x2="12" y2="12"></line>
+      </svg>
+    </div>
+    <div class="logo-text">Bring<span style="color:#10b981;">It</span></div>
+  </div>
+
+  <div id="tagline-elem" class="clip tagline" data-start="0.4" data-duration="2.6">
+    Never waste a commute again.
+  </div>
+
+  <div id="badge-elem" class="clip badge-pill" data-start="0.8" data-duration="2.2" data-layout-ignore="true">
+    <span>🛡️</span> CUET Verified Peer Delivery Network
+  </div>
+
+  <div id="url-elem" class="clip url-pill" data-start="1.2" data-duration="1.8">
+    bring-it-delivery.netlify.app
+  </div>
+</div>
+<script>
+  const tl = gsap.timeline({ paused: true });
+
+  // Brand slams in on beat
+  tl.fromTo("#brand-group", { opacity: 0, scale: 0.85, y: 30 }, { opacity: 1, scale: 1, y: 0, duration: 0.45, ease: "back.out(1.5)" }, 0.02);
+
+  // Tagline fades up
+  tl.fromTo("#tagline-elem", { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.4, ease: "power3.out" }, 0.4);
+
+  // Badge pops
+  tl.fromTo("#badge-elem", { opacity: 0, scale: 0.9 }, { opacity: 1, scale: 1, duration: 0.35, ease: "power3.out" }, 0.8);
+
+  // URL drops in
+  tl.fromTo("#url-elem", { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.4, ease: "power4.out" }, 1.2);
+
+  window.__timelines["outro"] = tl;
+</script>
+</template>

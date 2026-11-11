@@ -1,0 +1,4 @@
+BringIt is now live at CUET.
+Post campus errands, coordinate via realtime chat, and get items brought straight to your dorm hall by peers already on their way.
+https://bring-it-delivery.netlify.app
+

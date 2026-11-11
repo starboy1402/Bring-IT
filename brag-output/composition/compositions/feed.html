@@ -1,0 +1,117 @@
+<template>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap');
+  #root {
+    position: absolute; inset: 0;
+    background: #f8fafc;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    overflow: hidden;
+  }
+  .container {
+    width: 1100px;
+  }
+  .header-row {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 28px;
+  }
+  .section-tag {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-size: 14px; font-weight: 800; color: #047857; text-transform: uppercase; letter-spacing: 0.05em;
+  }
+  .radar-dot {
+    width: 10px; height: 10px; border-radius: 50%; background: #10b981;
+  }
+  .title {
+    font-size: 42px; font-weight: 800; color: #0f172a; letter-spacing: -0.02em; margin-top: 6px;
+  }
+  .card-stack {
+    display: flex; flex-direction: column; gap: 16px;
+  }
+  .request-card {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 20px;
+    padding: 24px 32px;
+    display: flex; justify-content: space-between; align-items: center;
+    box-shadow: 0 4px 16px -2px rgba(15, 23, 42, 0.04);
+  }
+  .card-title {
+    font-size: 24px; font-weight: 700; color: #0f172a; margin-bottom: 8px;
+  }
+  .card-route {
+    font-size: 16px; font-weight: 600; color: #64748b; display: flex; align-items: center; gap: 8px;
+  }
+  .route-arrow {
+    color: #059669; font-weight: 800;
+  }
+  .reward-pill {
+    background: #ecfdf5; border: 1px solid #a7f3d0;
+    color: #065f46; font-size: 22px; font-weight: 800;
+    padding: 8px 20px; border-radius: 9999px;
+  }
+  .badge {
+    padding: 6px 14px; border-radius: 8px; font-size: 13px; font-weight: 700; text-transform: uppercase;
+  }
+  .badge-low { background: #f1f5f9; color: #475569; }
+  .badge-med { background: #fef3c7; color: #92400e; }
+  .badge-high { background: #fee2e2; color: #991b1b; }
+</style>
+<div id="root" data-composition-id="feed" data-width="1920" data-height="1080">
+  <div class="container">
+    <div id="feed-header" class="clip header-row" data-start="0" data-duration="5">
+      <div>
+        <div class="section-tag" data-layout-ignore="true"><span class="radar-dot"></span> LIVE CAMPUS DISPATCH</div>
+        <h2 class="title">Open Errands Across CUET Halls</h2>
+      </div>
+    </div>
+
+    <div class="card-stack">
+      <div id="card-1" class="clip request-card" data-start="0.5" data-duration="4.5">
+        <div>
+          <div class="card-title">Cafeteria Lunch Box & Iced Tea</div>
+          <div class="card-route" data-layout-ignore="true">Central Cafeteria <span class="route-arrow">→</span> Shahid Hall (Room 304)</div>
+        </div>
+        <div style="display:flex; align-items:center; gap:16px;">
+          <span class="badge badge-med" data-layout-ignore="true">Medium</span>
+          <span class="reward-pill">৳50</span>
+        </div>
+      </div>
+
+      <div id="card-2" class="clip request-card" data-start="1.5" data-duration="3.5">
+        <div>
+          <div class="card-title">Paracetamol & ORS from Pahartoli</div>
+          <div class="card-route" data-layout-ignore="true">Campus Gate Pharmacy <span class="route-arrow">→</span> Dr. Q.K. Hall</div>
+        </div>
+        <div style="display:flex; align-items:center; gap:16px;">
+          <span class="badge badge-high" data-layout-ignore="true">High Urgency</span>
+          <span class="reward-pill">৳80</span>
+        </div>
+      </div>
+
+      <div id="card-3" class="clip request-card" data-start="2.5" data-duration="2.5">
+        <div>
+          <div class="card-title">Thesis Report Color Prints (40 Pages)</div>
+          <div class="card-route" data-layout-ignore="true">Library Printing Hub <span class="route-arrow">→</span> CSE Dept Lab</div>
+        </div>
+        <div style="display:flex; align-items:center; gap:16px;">
+          <span class="badge badge-low" data-layout-ignore="true">Low</span>
+          <span class="reward-pill">৳40</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+  const tl = gsap.timeline({ paused: true });
+
+  tl.fromTo("#feed-header", { opacity: 0, y: -20 }, { opacity: 1, y: 0, duration: 0.4, ease: "power3.out" }, 0.1);
+
+  // Cards slide in sequentially with tactile bounce
+  tl.fromTo("#card-1", { opacity: 0, x: -60, scale: 0.96 }, { opacity: 1, x: 0, scale: 1, duration: 0.45, ease: "back.out(1.2)" }, 0.5);
+  tl.fromTo("#card-2", { opacity: 0, x: -60, scale: 0.96 }, { opacity: 1, x: 0, scale: 1, duration: 0.45, ease: "back.out(1.2)" }, 1.5);
+  tl.fromTo("#card-3", { opacity: 0, x: -60, scale: 0.96 }, { opacity: 1, x: 0, scale: 1, duration: 0.45, ease: "back.out(1.2)" }, 2.5);
+
+  window.__timelines["feed"] = tl;
+</script>
+</template>

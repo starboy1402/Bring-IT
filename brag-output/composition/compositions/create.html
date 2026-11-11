@@ -1,0 +1,123 @@
+<template>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap');
+  #root {
+    position: absolute; inset: 0;
+    background: #f8fafc;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    overflow: hidden;
+  }
+  .form-card {
+    width: 900px;
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 28px;
+    padding: 40px;
+    box-shadow: 0 10px 30px -4px rgba(15, 23, 42, 0.08);
+  }
+  .form-header {
+    display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;
+  }
+  .form-title {
+    font-size: 32px; font-weight: 800; color: #0f172a; letter-spacing: -0.02em;
+  }
+  .section-label {
+    font-size: 13px; font-weight: 700; text-transform: uppercase; color: #64748b; letter-spacing: 0.05em; margin-bottom: 12px;
+  }
+  .pill-row {
+    display: flex; gap: 12px; margin-bottom: 24px; flex-wrap: wrap;
+  }
+  .pill {
+    padding: 12px 24px; border-radius: 16px; border: 1.5px solid #e2e8f0;
+    background: #f8fafc; font-size: 15px; font-weight: 700; color: #334155;
+  }
+  .pill.active {
+    background: #047857; border-color: #047857; color: #ffffff;
+    box-shadow: 0 4px 12px rgba(4, 120, 87, 0.25);
+  }
+  .reward-pill-btn {
+    padding: 12px 28px; border-radius: 16px; border: 1.5px solid #e2e8f0;
+    background: #f8fafc; font-size: 18px; font-weight: 800; color: #1e293b;
+  }
+  .reward-pill-btn.active {
+    background: #047857; border-color: #047857; color: #ffffff;
+    box-shadow: 0 4px 12px rgba(4, 120, 87, 0.25);
+  }
+  .submit-btn {
+    width: 100%; padding: 18px; border-radius: 18px;
+    background: #047857; color: #ffffff; font-size: 18px; font-weight: 800;
+    border: none; text-align: center; margin-top: 12px;
+    box-shadow: 0 4px 14px rgba(4, 120, 87, 0.3);
+  }
+</style>
+<div id="root" data-composition-id="create" data-width="1920" data-height="1080">
+  <div id="create-modal" class="clip form-card" data-start="0" data-duration="5">
+    <div class="form-header">
+      <div>
+        <div style="font-size:14px; font-weight:800; color:#047857; text-transform:uppercase;" data-layout-ignore="true">1-TAP CAMPUS POSTING</div>
+        <div class="form-title">What do you need brought?</div>
+      </div>
+      <span style="background:#ecfdf5; color:#065f46; font-size:14px; font-weight:700; padding:6px 14px; border-radius:9999px; border:1px solid #a7f3d0;" data-layout-ignore="true">
+        ⚡ Instant Broadcast
+      </span>
+    </div>
+
+    <div class="section-label" data-layout-ignore="true">Select Campus Pickup Location</div>
+    <div class="pill-row">
+      <div id="loc-1" class="pill" data-layout-ignore="true">Central Cafeteria</div>
+      <div id="loc-2" class="pill" data-layout-ignore="true">Central Library</div>
+      <div id="loc-3" class="pill" data-layout-ignore="true">Campus Gate</div>
+      <div id="loc-4" class="pill" data-layout-ignore="true">Medical Center</div>
+    </div>
+
+    <div class="section-label" data-layout-ignore="true">Set Peer Delivery Reward</div>
+    <div class="pill-row">
+      <div id="rew-20" class="reward-pill-btn" data-layout-ignore="true">৳20</div>
+      <div id="rew-30" class="reward-pill-btn" data-layout-ignore="true">৳30</div>
+      <div id="rew-50" class="reward-pill-btn" data-layout-ignore="true">৳50</div>
+      <div id="rew-80" class="reward-pill-btn" data-layout-ignore="true">৳80</div>
+      <div id="rew-100" class="reward-pill-btn" data-layout-ignore="true">৳100</div>
+    </div>
+
+    <div id="post-button" class="submit-btn">
+      Post Delivery Request (Shahid Hall) →
+    </div>
+  </div>
+</div>
+<script>
+  const tl = gsap.timeline({ paused: true });
+
+  // Modal pops up
+  tl.fromTo("#create-modal", { opacity: 0, scale: 0.94, y: 30 }, { opacity: 1, scale: 1, y: 0, duration: 0.45, ease: "power4.out" }, 0.1);
+
+  // Simulate tapping "Central Cafeteria" at 1.0s (sfx-click1 at 9.02s in master = 1.02s local)
+  tl.to("#loc-1", {
+    backgroundColor: "#047857",
+    color: "#ffffff",
+    borderColor: "#047857",
+    scale: 1.05,
+    duration: 0.15,
+    yoyo: true,
+    repeat: 1
+  }, 1.0);
+  tl.set("#loc-1", { className: "pill active" }, 1.15);
+
+  // Simulate tapping "৳50" at 2.0s (sfx-click2 at 10.02s in master = 2.02s local)
+  tl.to("#rew-50", {
+    backgroundColor: "#047857",
+    color: "#ffffff",
+    borderColor: "#047857",
+    scale: 1.08,
+    duration: 0.15,
+    yoyo: true,
+    repeat: 1
+  }, 2.0);
+  tl.set("#rew-50", { className: "reward-pill-btn active" }, 2.15);
+
+  // Submit button press pulse at 3.0s
+  tl.to("#post-button", { scale: 0.97, duration: 0.12, yoyo: true, repeat: 1, ease: "power2.inOut" }, 3.0);
+
+  window.__timelines["create"] = tl;
+</script>
+</template>

@@ -1,0 +1,1193 @@
+{
+  "ok": false,
+  "strict": false,
+  "browserSkipped": false,
+  "lint": {
+    "ok": true,
+    "errorCount": 0,
+    "warningCount": 0,
+    "infoCount": 0,
+    "findings": [],
+    "filesScanned": 6
+  },
+  "runtime": {
+    "ok": true,
+    "errorCount": 0,
+    "warningCount": 9,
+    "infoCount": 0,
+    "findings": [
+      {
+        "code": "clip_media_fit",
+        "severity": "warning",
+        "message": "Audio \"sfx-hook\" is 0.12s but its slot (data-duration) is 1.00s — the slot is shortened to the media length when rendered. Set data-duration to ~0.12s if that isn't intended.",
+        "selector": "[data-composition-id]",
+        "dataAttributes": {
+          "data-composition-id": "main",
+          "data-start": "0",
+          "data-duration": "20",
+          "data-fps": "30",
+          "data-width": "1920",
+          "data-height": "1080"
+        },
+        "sourceFile": "index.html",
+        "bbox": {
+          "x": 0,
+          "y": 0,
+          "width": 1920,
+          "height": 1080
+        },
+        "time": 0
+      },
+      {
+        "code": "clip_media_fit",
+        "severity": "warning",
+        "message": "Audio \"sfx-card1\" is 0.60s but its slot (data-duration) is 1.00s — the slot is shortened to the media length when rendered. Set data-duration to ~0.60s if that isn't intended.",
+        "selector": "[data-composition-id]",
+        "dataAttributes": {
+          "data-composition-id": "main",
+          "data-start": "0",
+          "data-duration": "20",
+          "data-fps": "30",
+          "data-width": "1920",
+          "data-height": "1080"
+        },
+        "sourceFile": "index.html",
+        "bbox": {
+          "x": 0,
+          "y": 0,
+          "width": 1920,
+          "height": 1080
+        },
+        "time": 0
+      },
+      {
+        "code": "clip_media_fit",
+        "severity": "warning",
+        "message": "Audio \"sfx-card2\" is 0.58s but its slot (data-duration) is 1.00s — the slot is shortened to the media length when rendered. Set data-duration to ~0.58s if that isn't intended.",
+        "selector": "[data-composition-id]",
+        "dataAttributes": {
+          "data-composition-id": "main",
+          "data-start": "0",
+          "data-duration": "20",
+          "data-fps": "30",
+          "data-width": "1920",
+          "data-height": "1080"
+        },
+        "sourceFile": "index.html",
+        "bbox": {
+          "x": 0,
+          "y": 0,
+          "width": 1920,
+          "height": 1080
+        },
+        "time": 0
+      },
+      {
+        "code": "clip_media_fit",
+        "severity": "warning",
+        "message": "Audio \"sfx-card3\" is 0.60s but its slot (data-duration) is 1.00s — the slot is shortened to the media length when rendered. Set data-duration to ~0.60s if that isn't intended.",
+        "selector": "[data-composition-id]",
+        "dataAttributes": {
+          "data-composition-id": "main",
+          "data-start": "0",
+          "data-duration": "20",
+          "data-fps": "30",
+          "data-width": "1920",
+          "data-height": "1080"
+        },
+        "sourceFile": "index.html",
+        "bbox": {
+          "x": 0,
+          "y": 0,
+          "width": 1920,
+          "height": 1080
+        },
+        "time": 0
+      },
+      {
+        "code": "clip_media_fit",
+        "severity": "warning",
+        "message": "Audio \"sfx-click1\" is 0.01s but its slot (data-duration) is 0.50s — the slot is shortened to the media length when rendered. Set data-duration to ~0.01s if that isn't intended.",
+        "selector": "[data-composition-id]",
+        "dataAttributes": {
+          "data-composition-id": "main",
+          "data-start": "0",
+          "data-duration": "20",
+          "data-fps": "30",
+          "data-width": "1920",
+          "data-height": "1080"
+        },
+        "sourceFile": "index.html",
+        "bbox": {
+          "x": 0,
+          "y": 0,
+          "width": 1920,
+          "height": 1080
+        },
+        "time": 0
+      },
+      {
+        "code": "clip_media_fit",
+        "severity": "warning",
+        "message": "Audio \"sfx-click2\" is 0.01s but its slot (data-duration) is 0.50s — the slot is shortened to the media length when rendered. Set data-duration to ~0.01s if that isn't intended.",
+        "selector": "[data-composition-id]",
+        "dataAttributes": {
+          "data-composition-id": "main",
+          "data-start": "0",
+          "data-duration": "20",
+          "data-fps": "30",
+          "data-width": "1920",
+          "data-height": "1080"
+        },
+        "sourceFile": "index.html",
+        "bbox": {
+          "x": 0,
+          "y": 0,
+          "width": 1920,
+          "height": 1080
+        },
+        "time": 0
+      },
+      {
+        "code": "clip_media_fit",
+        "severity": "warning",
+        "message": "Audio \"sfx-msg1\" is 0.11s but its slot (data-duration) is 0.80s — the slot is shortened to the media length when rendered. Set data-duration to ~0.11s if that isn't intended.",
+        "selector": "[data-composition-id]",
+        "dataAttributes": {
+          "data-composition-id": "main",
+          "data-start": "0",
+          "data-duration": "20",
+          "data-fps": "30",
+          "data-width": "1920",
+          "data-height": "1080"
+        },
+        "sourceFile": "index.html",
+        "bbox": {
+          "x": 0,
+          "y": 0,
+          "width": 1920,
+          "height": 1080
+        },
+        "time": 0
+      },
+      {
+        "code": "clip_media_fit",
+        "severity": "warning",
+        "message": "Audio \"sfx-msg2\" is 0.11s but its slot (data-duration) is 0.80s — the slot is shortened to the media length when rendered. Set data-duration to ~0.11s if that isn't intended.",
+        "selector": "[data-composition-id]",
+        "dataAttributes": {
+          "data-composition-id": "main",
+          "data-start": "0",
+          "data-duration": "20",
+          "data-fps": "30",
+          "data-width": "1920",
+          "data-height": "1080"
+        },
+        "sourceFile": "index.html",
+        "bbox": {
+          "x": 0,
+          "y": 0,
+          "width": 1920,
+          "height": 1080
+        },
+        "time": 0
+      },
+      {
+        "code": "clip_media_fit",
+        "severity": "warning",
+        "message": "Audio \"sfx-logo\" is 1.48s but its slot (data-duration) is 2.00s — the slot is shortened to the media length when rendered. Set data-duration to ~1.48s if that isn't intended.",
+        "selector": "[data-composition-id]",
+        "dataAttributes": {
+          "data-composition-id": "main",
+          "data-start": "0",
+          "data-duration": "20",
+          "data-fps": "30",
+          "data-width": "1920",
+          "data-height": "1080"
+        },
+        "sourceFile": "index.html",
+        "bbox": {
+          "x": 0,
+          "y": 0,
+          "width": 1920,
+          "height": 1080
+        },
+        "time": 0
+      }
+    ]
+  },
+  "layout": {
+    "ok": true,
+    "errorCount": 0,
+    "warningCount": 0,
+    "infoCount": 1,
+    "findings": [
+      {
+        "code": "container_overflow",
+        "severity": "info",
+        "time": 1.111,
+        "selector": "#hook-glow",
+        "message": "Element extends outside a clipping layout container.",
+        "rect": {
+          "left": 1559.53,
+          "top": -100.47,
+          "right": 2020.47,
+          "bottom": 360.47,
+          "width": 460.95,
+          "height": 460.95
+        },
+        "containerSelector": "#hook > div:nth-of-type(1)",
+        "fixHint": "Resize/reposition the child or container, or mark intentional overflow with data-layout-allow-overflow.",
+        "containerRect": {
+          "left": 0,
+          "top": 0,
+          "right": 1920,
+          "bottom": 1080,
+          "width": 1920,
+          "height": 1080
+        },
+        "overflow": {
+          "right": 100.47,
+          "top": 100.47
+        },
+        "dataAttributes": {},
+        "sourceFile": "compositions/hook.html",
+        "bbox": {
+          "x": 1559.53,
+          "y": -100.47,
+          "width": 460.95,
+          "height": 460.95
+        },
+        "firstSeen": 1.111,
+        "lastSeen": 1.111,
+        "occurrences": 1,
+        "heldMs": 0,
+        "times": [
+          1.111
+        ]
+      }
+    ],
+    "duration": 20,
+    "samples": [
+      1.111,
+      3.333,
+      5.556,
+      7.778,
+      10,
+      12.222,
+      14.444,
+      16.667,
+      18.889
+    ],
+    "transitionSamples": [],
+    "transitionSamplesDropped": 0,
+    "tolerance": 2,
+    "totalIssueCount": 1,
+    "truncated": false
+  },
+  "motion": {
+    "ok": true,
+    "errorCount": 0,
+    "warningCount": 0,
+    "infoCount": 0,
+    "findings": [],
+    "enabled": false,
+    "samples": 0
+  },
+  "contrast": {
+    "ok": true,
+    "errorCount": 0,
+    "warningCount": 4,
+    "infoCount": 0,
+    "findings": [
+      {
+        "code": "contrast_aa_failure",
+        "severity": "warning",
+        "message": "Contrast is 3.77:1; WCAG AA requires 4.5:1.",
+        "text": "→",
+        "fg": "rgb(5,150,105)",
+        "bg": "rgb(255,255,255)",
+        "ratio": 3.77,
+        "requiredRatio": 4.5,
+        "suggestedColor": "rgb(5,135,95)",
+        "large": false,
+        "selector": "div > div:nth-of-type(2) > div > div > div:nth-of-type(2) > div:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(2) > span",
+        "dataAttributes": {},
+        "sourceFile": "compositions/feed.html",
+        "bbox": {
+          "x": 583.15625,
+          "y": 494.921875,
+          "width": 12.8125,
+          "height": 21
+        },
+        "time": 5.556,
+        "times": [
+          5.556
+        ]
+      },
+      {
+        "code": "contrast_aa_failure",
+        "severity": "warning",
+        "message": "Contrast is 3.77:1; WCAG AA requires 4.5:1.",
+        "text": "→",
+        "fg": "rgb(5,150,105)",
+        "bg": "rgb(255,255,255)",
+        "ratio": 3.77,
+        "requiredRatio": 4.5,
+        "suggestedColor": "rgb(5,135,95)",
+        "large": false,
+        "selector": "div > div:nth-of-type(2) > div > div > div:nth-of-type(2) > div:nth-of-type(2) > div:nth-of-type(1) > div:nth-of-type(2) > span",
+        "dataAttributes": {},
+        "sourceFile": "compositions/feed.html",
+        "bbox": {
+          "x": 636.84375,
+          "y": 619.921875,
+          "width": 12.8125,
+          "height": 21
+        },
+        "time": 5.556,
+        "times": [
+          5.556
+        ]
+      },
+      {
+        "code": "contrast_aa_failure",
+        "severity": "warning",
+        "message": "Contrast is 3.64:1; WCAG AA requires 4.5:1.",
+        "text": "→",
+        "fg": "rgb(5,150,105)",
+        "bg": "rgb(250,251,253)",
+        "ratio": 3.64,
+        "requiredRatio": 4.5,
+        "suggestedColor": "rgb(4,132,93)",
+        "large": false,
+        "selector": "div > div:nth-of-type(2) > div > div > div:nth-of-type(2) > div:nth-of-type(3) > div:nth-of-type(1) > div:nth-of-type(2) > span",
+        "dataAttributes": {},
+        "sourceFile": "compositions/feed.html",
+        "bbox": {
+          "x": 568.564453125,
+          "y": 744.6779174804688,
+          "width": 12.44482421875,
+          "height": 20.39727783203125
+        },
+        "time": 5.556,
+        "times": [
+          5.556
+        ]
+      },
+      {
+        "code": "contrast_aa_failure",
+        "severity": "warning",
+        "message": "Contrast is 2.56:1; WCAG AA requires 4.5:1.",
+        "text": "Deliverer (Sakib • Shahid Hall) • Just now",
+        "fg": "rgb(148,163,184)",
+        "bg": "rgb(255,255,255)",
+        "ratio": 2.56,
+        "requiredRatio": 4.5,
+        "suggestedColor": "rgb(108,119,134)",
+        "large": false,
+        "selector": "div > div:nth-of-type(4) > div > div > div:nth-of-type(2) > div:nth-of-type(1) > div:nth-of-type(2)",
+        "dataAttributes": {},
+        "sourceFile": "compositions/chat.html",
+        "bbox": {
+          "x": 588,
+          "y": 569.5,
+          "width": 231.40625,
+          "height": 15
+        },
+        "time": 14.444,
+        "times": [
+          14.444
+        ]
+      }
+    ],
+    "enabled": true,
+    "samples": [
+      1.111,
+      5.556,
+      10,
+      14.444,
+      18.889
+    ],
+    "checked": 48,
+    "passed": 44
+  },
+  "craft": {
+    "ok": true,
+    "errorCount": 0,
+    "warningCount": 7,
+    "infoCount": 0,
+    "findings": [
+      {
+        "code": "first_frame_empty",
+        "severity": "warning",
+        "message": "Frame 0 shows only the background, and the first frame is the thumbnail on social players: have the title or key image already on screen at 0 s instead of entering from nothing; see references/review.md.",
+        "selector": "[data-composition-id]",
+        "dataAttributes": {},
+        "sourceFile": "index.html",
+        "bbox": {
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0
+        },
+        "time": 0
+      },
+      {
+        "code": "text_below_floor",
+        "severity": "warning",
+        "message": "Type floor is 28 px (2.6% of the 1080 px short side, what a phone can read) and \"CUET CAMPUS NETWORK\" renders at 16 px for 2.88 s: set reading text to at least 28 px, or put data-layout-ignore on text that is texture rather than reading; see references/look.md.",
+        "text": "CUET CAMPUS NETWORK",
+        "selector": "#hook-badge-text",
+        "dataAttributes": {},
+        "sourceFile": "compositions/hook.html",
+        "bbox": {
+          "x": 860.61,
+          "y": 507.17,
+          "width": 214.78,
+          "height": 21
+        },
+        "time": 0.125,
+        "times": [
+          0.125
+        ],
+        "fontPx": 16,
+        "floorPx": 28,
+        "seconds": 2.875,
+        "elements": [
+          {
+            "selector": "#hook-badge-text",
+            "text": "CUET CAMPUS NETWORK",
+            "fontPx": 16,
+            "time": 0.125,
+            "seconds": 2.875
+          }
+        ]
+      },
+      {
+        "code": "line_unread",
+        "severity": "warning",
+        "message": "\"A student already going can bring it.\" (7 words) is on screen 1.90 s (±0.01 s), under its 1.95 s floor: hold it about 0.5 s + 0.3 s a word (2.60 s here) before it leaves or changes; see references/motion.md.",
+        "text": "A student already going can bring it.",
+        "selector": "#hook-subline",
+        "dataAttributes": {},
+        "sourceFile": "compositions/hook.html",
+        "bbox": {
+          "x": 724.91,
+          "y": 650.02,
+          "width": 470.17999999999995,
+          "height": 35
+        },
+        "time": 1.102,
+        "words": 7,
+        "seconds": 1.898,
+        "floorSeconds": 1.95,
+        "measured": [
+          {
+            "time": 0.75,
+            "opacity": null,
+            "heightPx": null
+          },
+          {
+            "time": 0.875,
+            "opacity": null,
+            "heightPx": null
+          },
+          {
+            "time": 1,
+            "opacity": null,
+            "heightPx": null
+          },
+          {
+            "time": 1.125,
+            "opacity": 0.59,
+            "heightPx": 35
+          },
+          {
+            "time": 1.25,
+            "opacity": 0.92,
+            "heightPx": 35
+          },
+          {
+            "time": 1.375,
+            "opacity": 0.99,
+            "heightPx": 35
+          },
+          {
+            "time": 1.5,
+            "opacity": 1,
+            "heightPx": 35
+          },
+          {
+            "time": 2.5,
+            "opacity": 1,
+            "heightPx": 35
+          },
+          {
+            "time": 2.625,
+            "opacity": 1,
+            "heightPx": 35
+          },
+          {
+            "time": 2.75,
+            "opacity": 1,
+            "heightPx": 35
+          },
+          {
+            "time": 2.875,
+            "opacity": 1,
+            "heightPx": 35
+          },
+          {
+            "time": 3,
+            "opacity": null,
+            "heightPx": null
+          },
+          {
+            "time": 3.125,
+            "opacity": null,
+            "heightPx": null
+          },
+          {
+            "time": 3.25,
+            "opacity": null,
+            "heightPx": null
+          }
+        ]
+      },
+      {
+        "code": "text_below_floor",
+        "severity": "warning",
+        "message": "Type floor is 28 px (2.6% of the 1080 px short side, what a phone can read) and 13 text elements stay under it for 0.5 s or more, the smallest \"Medium\" at 13 px: set reading text to at least 28 px, or put data-layout-ignore on text that is texture rather than reading; see references/look.md.",
+        "text": "Medium",
+        "selector": "span.badge.badge-med",
+        "dataAttributes": {},
+        "sourceFile": "compositions/feed.html",
+        "bbox": {
+          "x": 1281.92,
+          "y": 603.52,
+          "width": 52.89,
+          "height": 15.8
+        },
+        "time": 3.625,
+        "times": [
+          3.25,
+          3.625,
+          3.625,
+          3.625,
+          3.625,
+          4.625,
+          4.625,
+          4.625,
+          4.625,
+          5.625,
+          5.625,
+          5.625,
+          5.625
+        ],
+        "fontPx": 12.84,
+        "floorPx": 28,
+        "seconds": 4.375,
+        "elements": [
+          {
+            "selector": "span.badge.badge-med",
+            "text": "Medium",
+            "fontPx": 12.84,
+            "time": 3.625,
+            "seconds": 4.375
+          },
+          {
+            "selector": "span.badge.badge-high",
+            "text": "High Urgency",
+            "fontPx": 12.84,
+            "time": 4.625,
+            "seconds": 3.375
+          },
+          {
+            "selector": "span.badge.badge-low",
+            "text": "Low",
+            "fontPx": 12.84,
+            "time": 5.625,
+            "seconds": 2.375
+          },
+          {
+            "selector": "div.section-tag",
+            "text": "LIVE CAMPUS DISPATCH",
+            "fontPx": 14,
+            "time": 3.25,
+            "seconds": 4.75
+          },
+          {
+            "selector": "#card-1 > div:nth-of-type(1) > div:nth-of-type(2)",
+            "text": "Central Cafeteria Shahid Hall (Room 304)",
+            "fontPx": 15.8,
+            "time": 3.625,
+            "seconds": 4.375
+          },
+          {
+            "selector": "#card-2 > div:nth-of-type(1) > div:nth-of-type(2)",
+            "text": "Campus Gate Pharmacy Dr. Q.K. Hall",
+            "fontPx": 15.8,
+            "time": 4.625,
+            "seconds": 3.375
+          },
+          {
+            "selector": "#card-3 > div:nth-of-type(1) > div:nth-of-type(2)",
+            "text": "Library Printing Hub CSE Dept Lab",
+            "fontPx": 15.8,
+            "time": 5.625,
+            "seconds": 2.375
+          },
+          {
+            "selector": "#card-1 > div:nth-of-type(2) > span:nth-of-type(2)",
+            "text": "৳50",
+            "fontPx": 21.73,
+            "time": 3.625,
+            "seconds": 4.375
+          },
+          {
+            "selector": "#card-2 > div:nth-of-type(2) > span:nth-of-type(2)",
+            "text": "৳80",
+            "fontPx": 21.73,
+            "time": 4.625,
+            "seconds": 3.375
+          },
+          {
+            "selector": "#card-3 > div:nth-of-type(2) > span:nth-of-type(2)",
+            "text": "৳40",
+            "fontPx": 21.73,
+            "time": 5.625,
+            "seconds": 2.375
+          },
+          {
+            "selector": "#card-1 > div:nth-of-type(1) > div:nth-of-type(1)",
+            "text": "Cafeteria Lunch Box & Iced Tea",
+            "fontPx": 23.7,
+            "time": 3.625,
+            "seconds": 4.375
+          },
+          {
+            "selector": "#card-2 > div:nth-of-type(1) > div:nth-of-type(1)",
+            "text": "Paracetamol & ORS from Pahartoli",
+            "fontPx": 23.7,
+            "time": 4.625,
+            "seconds": 3.375
+          },
+          {
+            "selector": "#card-3 > div:nth-of-type(1) > div:nth-of-type(1)",
+            "text": "Thesis Report Color Prints (40 Pages)",
+            "fontPx": 23.7,
+            "time": 5.625,
+            "seconds": 2.375
+          }
+        ]
+      },
+      {
+        "code": "text_below_floor",
+        "severity": "warning",
+        "message": "Type floor is 28 px (2.6% of the 1080 px short side, what a phone can read) and 14 text elements stay under it for 0.5 s or more, the smallest \"1-TAP CAMPUS POSTING\" at 12 px: set reading text to at least 28 px, or put data-layout-ignore on text that is texture rather than reading; see references/look.md.",
+        "text": "1-TAP CAMPUS POSTING",
+        "selector": "div.form-header > div:nth-of-type(1) > div:nth-of-type(1)",
+        "dataAttributes": {},
+        "sourceFile": "compositions/create.html",
+        "bbox": {
+          "x": 514.68,
+          "y": 378.43,
+          "width": 146.41,
+          "height": 14.84
+        },
+        "time": 8.25,
+        "times": [
+          8.25,
+          8.25,
+          8.25,
+          8.25,
+          8.25,
+          8.25,
+          8.25,
+          8.25,
+          8.25,
+          8.25,
+          8.25,
+          8.25,
+          8.25,
+          8.25
+        ],
+        "fontPx": 11.88,
+        "floorPx": 28,
+        "seconds": 4.75,
+        "elements": [
+          {
+            "selector": "div.form-header > div:nth-of-type(1) > div:nth-of-type(1)",
+            "text": "1-TAP CAMPUS POSTING",
+            "fontPx": 11.88,
+            "time": 8.25,
+            "seconds": 4.75
+          },
+          {
+            "selector": "div.form-header > span:nth-of-type(1)",
+            "text": "⚡ Instant Broadcast",
+            "fontPx": 12.86,
+            "time": 8.25,
+            "seconds": 4.75
+          },
+          {
+            "selector": "#create-modal > div:nth-of-type(2)",
+            "text": "Select Campus Pickup Location",
+            "fontPx": 12.86,
+            "time": 8.25,
+            "seconds": 4.75
+          },
+          {
+            "selector": "#create-modal > div:nth-of-type(4)",
+            "text": "Set Peer Delivery Reward",
+            "fontPx": 12.86,
+            "time": 8.25,
+            "seconds": 4.75
+          },
+          {
+            "selector": "#loc-1",
+            "text": "Central Cafeteria",
+            "fontPx": 14.84,
+            "time": 8.25,
+            "seconds": 4.75
+          },
+          {
+            "selector": "#loc-2",
+            "text": "Central Library",
+            "fontPx": 14.84,
+            "time": 8.25,
+            "seconds": 4.75
+          },
+          {
+            "selector": "#loc-3",
+            "text": "Campus Gate",
+            "fontPx": 14.84,
+            "time": 8.25,
+            "seconds": 4.75
+          },
+          {
+            "selector": "#loc-4",
+            "text": "Medical Center",
+            "fontPx": 14.84,
+            "time": 8.25,
+            "seconds": 4.75
+          },
+          {
+            "selector": "#post-button",
+            "text": "Post Delivery Request (Shahid Hall) →",
+            "fontPx": 17.47,
+            "time": 8.25,
+            "seconds": 4.75
+          },
+          {
+            "selector": "#rew-20",
+            "text": "৳20",
+            "fontPx": 17.81,
+            "time": 8.25,
+            "seconds": 4.75
+          },
+          {
+            "selector": "#rew-30",
+            "text": "৳30",
+            "fontPx": 17.81,
+            "time": 8.25,
+            "seconds": 4.75
+          },
+          {
+            "selector": "#rew-50",
+            "text": "৳50",
+            "fontPx": 17.81,
+            "time": 8.25,
+            "seconds": 4.75
+          },
+          {
+            "selector": "#rew-80",
+            "text": "৳80",
+            "fontPx": 17.81,
+            "time": 8.25,
+            "seconds": 4.75
+          },
+          {
+            "selector": "#rew-100",
+            "text": "৳100",
+            "fontPx": 17.81,
+            "time": 8.25,
+            "seconds": 4.75
+          }
+        ]
+      },
+      {
+        "code": "text_below_floor",
+        "severity": "warning",
+        "message": "Type floor is 28 px (2.6% of the 1080 px short side, what a phone can read) and 10 text elements stay under it for 0.5 s or more, the smallest \"You • Just now\" at 12 px: set reading text to at least 28 px, or put data-layout-ignore on text that is texture rather than reading; see references/look.md.",
+        "text": "You • Just now",
+        "selector": "#msg-2 > div:nth-of-type(2)",
+        "dataAttributes": {},
+        "sourceFile": "compositions/chat.html",
+        "bbox": {
+          "x": 1244.96,
+          "y": 624.78,
+          "width": 81.76,
+          "height": 14.79
+        },
+        "time": 14.875,
+        "times": [
+          13.25,
+          13.25,
+          13.25,
+          13.25,
+          13.25,
+          13.25,
+          13.625,
+          13.625,
+          14.875,
+          14.875
+        ],
+        "fontPx": 11.83,
+        "floorPx": 28,
+        "seconds": 2.125,
+        "elements": [
+          {
+            "selector": "#msg-2 > div:nth-of-type(2)",
+            "text": "You • Just now",
+            "fontPx": 11.83,
+            "time": 14.875,
+            "seconds": 2.125
+          },
+          {
+            "selector": "div.chat-header > div:nth-of-type(1) > div:nth-of-type(2)",
+            "text": "Cafeteria Lunch Box → Shahid Hall",
+            "fontPx": 11.88,
+            "time": 13.25,
+            "seconds": 3.75
+          },
+          {
+            "selector": "#msg-1 > div:nth-of-type(2)",
+            "text": "Deliverer (Sakib • Shahid Hall) • Just now",
+            "fontPx": 11.92,
+            "time": 13.625,
+            "seconds": 3.375
+          },
+          {
+            "selector": "div.chat-status",
+            "text": "In Transit",
+            "fontPx": 12.87,
+            "time": 13.25,
+            "seconds": 3.75
+          },
+          {
+            "selector": "div.quick-reply-bar > div:nth-of-type(1)",
+            "text": "At the gate",
+            "fontPx": 12.87,
+            "time": 13.25,
+            "seconds": 3.75
+          },
+          {
+            "selector": "div.quick-reply-bar > div:nth-of-type(2)",
+            "text": "On the campus bus 🚌",
+            "fontPx": 12.87,
+            "time": 13.25,
+            "seconds": 3.75
+          },
+          {
+            "selector": "div.quick-reply-bar > div:nth-of-type(3)",
+            "text": "Arrived at hall",
+            "fontPx": 12.87,
+            "time": 13.25,
+            "seconds": 3.75
+          },
+          {
+            "selector": "div.bubble-right",
+            "text": "Awesome! Heading downstairs right now 👍",
+            "fontPx": 17.74,
+            "time": 14.875,
+            "seconds": 2.125
+          },
+          {
+            "selector": "div.chat-title",
+            "text": "Delivery Mission Coordination",
+            "fontPx": 17.82,
+            "time": 13.25,
+            "seconds": 3.75
+          },
+          {
+            "selector": "div.bubble-left",
+            "text": "Picked up your order from Cafeteria! Hot & fresh 🍔",
+            "fontPx": 17.88,
+            "time": 13.625,
+            "seconds": 3.375
+          }
+        ]
+      },
+      {
+        "code": "text_below_floor",
+        "severity": "warning",
+        "message": "Type floor is 28 px (2.6% of the 1080 px short side, what a phone can read) and 3 text elements stay under it for 0.5 s or more, the smallest \"CUET Verified Peer Delivery Network\" at 14 px: set reading text to at least 28 px, or put data-layout-ignore on text that is texture rather than reading; see references/look.md.",
+        "text": "CUET Verified Peer Delivery Network",
+        "selector": "#badge-elem",
+        "dataAttributes": {},
+        "sourceFile": "compositions/outro.html",
+        "bbox": {
+          "x": 817.96,
+          "y": 615.41,
+          "width": 314.09,
+          "height": 18.18
+        },
+        "time": 17.875,
+        "times": [
+          17.875,
+          17.875,
+          18.375
+        ],
+        "fontPx": 14.36,
+        "floorPx": 28,
+        "seconds": 2.125,
+        "elements": [
+          {
+            "selector": "#badge-elem",
+            "text": "CUET Verified Peer Delivery Network",
+            "fontPx": 14.36,
+            "time": 17.875,
+            "seconds": 2.125
+          },
+          {
+            "selector": "#badge-elem > span:nth-of-type(1)",
+            "text": "🛡️",
+            "fontPx": 14.36,
+            "time": 17.875,
+            "seconds": 2.125
+          },
+          {
+            "selector": "#url-elem",
+            "text": "bring-it-delivery.netlify.app",
+            "fontPx": 20,
+            "time": 18.375,
+            "seconds": 1.625
+          }
+        ]
+      }
+    ],
+    "enabled": true,
+    "step": 0.125,
+    "samples": 160
+  },
+  "audio": {
+    "ok": false,
+    "errorCount": 10,
+    "warningCount": 0,
+    "infoCount": 0,
+    "findings": [
+      {
+        "code": "audio_source_unreadable",
+        "severity": "error",
+        "message": "assets/music/happy-beats-business-moves-vol-1-by-ende-dot-app.mp3 cannot be read as audio ([FFmpeg] ffprobe not found. Please install FFmpeg.), so the render's audio mix fails and the render stops.",
+        "selector": "#bg-music",
+        "dataAttributes": {},
+        "sourceFile": "index.html",
+        "bbox": {
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0
+        },
+        "time": 0,
+        "timeRange": [
+          0,
+          20
+        ],
+        "fixHint": "Point src at a file with an audio track, or re-export this one."
+      },
+      {
+        "code": "audio_source_unreadable",
+        "severity": "error",
+        "message": "assets/sfx/impact/impactSoft_medium_000.ogg cannot be read as audio ([FFmpeg] ffprobe not found. Please install FFmpeg.), so the render's audio mix fails and the render stops.",
+        "selector": "#sfx-hook",
+        "dataAttributes": {},
+        "sourceFile": "index.html",
+        "bbox": {
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0
+        },
+        "time": 0.3,
+        "timeRange": [
+          0.3,
+          1.3
+        ],
+        "fixHint": "Point src at a file with an audio track, or re-export this one."
+      },
+      {
+        "code": "audio_source_unreadable",
+        "severity": "error",
+        "message": "assets/sfx/casino/card-slide-1.ogg cannot be read as audio ([FFmpeg] ffprobe not found. Please install FFmpeg.), so the render's audio mix fails and the render stops.",
+        "selector": "#sfx-card1",
+        "dataAttributes": {},
+        "sourceFile": "index.html",
+        "bbox": {
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0
+        },
+        "time": 3.52,
+        "timeRange": [
+          3.52,
+          4.52
+        ],
+        "fixHint": "Point src at a file with an audio track, or re-export this one."
+      },
+      {
+        "code": "audio_source_unreadable",
+        "severity": "error",
+        "message": "assets/sfx/casino/card-slide-2.ogg cannot be read as audio ([FFmpeg] ffprobe not found. Please install FFmpeg.), so the render's audio mix fails and the render stops.",
+        "selector": "#sfx-card2",
+        "dataAttributes": {},
+        "sourceFile": "index.html",
+        "bbox": {
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0
+        },
+        "time": 4.53,
+        "timeRange": [
+          4.53,
+          5.53
+        ],
+        "fixHint": "Point src at a file with an audio track, or re-export this one."
+      },
+      {
+        "code": "audio_source_unreadable",
+        "severity": "error",
+        "message": "assets/sfx/casino/card-slide-3.ogg cannot be read as audio ([FFmpeg] ffprobe not found. Please install FFmpeg.), so the render's audio mix fails and the render stops.",
+        "selector": "#sfx-card3",
+        "dataAttributes": {},
+        "sourceFile": "index.html",
+        "bbox": {
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0
+        },
+        "time": 5.53,
+        "timeRange": [
+          5.53,
+          6.53
+        ],
+        "fixHint": "Point src at a file with an audio track, or re-export this one."
+      },
+      {
+        "code": "audio_source_unreadable",
+        "severity": "error",
+        "message": "assets/sfx/interface/click_003.ogg cannot be read as audio ([FFmpeg] ffprobe not found. Please install FFmpeg.), so the render's audio mix fails and the render stops.",
+        "selector": "#sfx-click1",
+        "dataAttributes": {},
+        "sourceFile": "index.html",
+        "bbox": {
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0
+        },
+        "time": 9.02,
+        "timeRange": [
+          9.02,
+          9.52
+        ],
+        "fixHint": "Point src at a file with an audio track, or re-export this one."
+      },
+      {
+        "code": "audio_source_unreadable",
+        "severity": "error",
+        "message": "assets/sfx/interface/click_003.ogg cannot be read as audio ([FFmpeg] ffprobe not found. Please install FFmpeg.), so the render's audio mix fails and the render stops.",
+        "selector": "#sfx-click2",
+        "dataAttributes": {},
+        "sourceFile": "index.html",
+        "bbox": {
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0
+        },
+        "time": 10.02,
+        "timeRange": [
+          10.02,
+          10.52
+        ],
+        "fixHint": "Point src at a file with an audio track, or re-export this one."
+      },
+      {
+        "code": "audio_source_unreadable",
+        "severity": "error",
+        "message": "assets/sfx/interface/drop_001.ogg cannot be read as audio ([FFmpeg] ffprobe not found. Please install FFmpeg.), so the render's audio mix fails and the render stops.",
+        "selector": "#sfx-msg1",
+        "dataAttributes": {},
+        "sourceFile": "index.html",
+        "bbox": {
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0
+        },
+        "time": 13.5,
+        "timeRange": [
+          13.5,
+          14.3
+        ],
+        "fixHint": "Point src at a file with an audio track, or re-export this one."
+      },
+      {
+        "code": "audio_source_unreadable",
+        "severity": "error",
+        "message": "assets/sfx/interface/drop_001.ogg cannot be read as audio ([FFmpeg] ffprobe not found. Please install FFmpeg.), so the render's audio mix fails and the render stops.",
+        "selector": "#sfx-msg2",
+        "dataAttributes": {},
+        "sourceFile": "index.html",
+        "bbox": {
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0
+        },
+        "time": 14.8,
+        "timeRange": [
+          14.8,
+          15.600000000000001
+        ],
+        "fixHint": "Point src at a file with an audio track, or re-export this one."
+      },
+      {
+        "code": "audio_source_unreadable",
+        "severity": "error",
+        "message": "assets/sfx/impact/impactBell_heavy_000.ogg cannot be read as audio ([FFmpeg] ffprobe not found. Please install FFmpeg.), so the render's audio mix fails and the render stops.",
+        "selector": "#sfx-logo",
+        "dataAttributes": {},
+        "sourceFile": "index.html",
+        "bbox": {
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0
+        },
+        "time": 17.02,
+        "timeRange": [
+          17.02,
+          19.02
+        ],
+        "fixHint": "Point src at a file with an audio track, or re-export this one."
+      }
+    ]
+  },
+  "hdr": {
+    "autoPromotion": null,
+    "inspection": "available"
+  },
+  "snapshots": {
+    "enabled": false,
+    "files": [],
+    "times": [],
+    "findingFiles": []
+  }
+}

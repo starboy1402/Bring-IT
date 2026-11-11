@@ -1,0 +1,105 @@
+<template>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap');
+  #root {
+    position: absolute; inset: 0;
+    background: #f8fafc;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    overflow: hidden;
+  }
+  .chat-card {
+    width: 800px;
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 28px;
+    box-shadow: 0 10px 30px -4px rgba(15, 23, 42, 0.08);
+    overflow: hidden;
+  }
+  .chat-header {
+    background: #0f172a;
+    padding: 20px 28px;
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .chat-title {
+    color: #ffffff; font-size: 18px; font-weight: 800;
+  }
+  .chat-status {
+    color: #34d399; font-size: 13px; font-weight: 700; display: flex; align-items: center; gap: 6px;
+  }
+  .chat-body {
+    padding: 32px 28px; display: flex; flex-direction: column; gap: 20px;
+  }
+  .bubble-wrap-left {
+    display: flex; flex-direction: column; align-items: flex-start;
+  }
+  .bubble-wrap-right {
+    display: flex; flex-direction: column; align-items: flex-end;
+  }
+  .bubble-left {
+    background: #f1f5f9; color: #0f172a; border-radius: 20px 20px 20px 4px;
+    padding: 16px 22px; font-size: 18px; font-weight: 600; max-width: 500px;
+  }
+  .bubble-right {
+    background: #047857; color: #ffffff; border-radius: 20px 20px 4px 20px;
+    padding: 16px 22px; font-size: 18px; font-weight: 600; max-width: 500px;
+    box-shadow: 0 4px 12px rgba(4, 120, 87, 0.2);
+  }
+  .bubble-meta {
+    font-size: 12px; font-weight: 600; color: #94a3b8; margin-top: 6px;
+  }
+  .quick-reply-bar {
+    border-top: 1px solid #f1f5f9; padding: 16px 28px; display: flex; gap: 10px; background: #fafafa;
+  }
+  .quick-chip {
+    padding: 8px 16px; border-radius: 9999px; background: #ffffff; border: 1px solid #cbd5e1;
+    font-size: 13px; font-weight: 700; color: #475569;
+  }
+</style>
+<div id="root" data-composition-id="chat" data-width="1920" data-height="1080">
+  <div id="chat-window" class="clip chat-card" data-start="0" data-duration="4">
+    <div class="chat-header">
+      <div>
+        <div class="chat-title">Delivery Mission Coordination</div>
+        <div style="font-size:14px; color:#94a3b8; margin-top:2px;" data-layout-ignore="true">Cafeteria Lunch Box → Shahid Hall</div>
+      </div>
+      <div class="chat-status" data-layout-ignore="true">
+        <span style="width:8px; height:8px; border-radius:50%; background:#10b981;"></span>
+        In Transit
+      </div>
+    </div>
+
+    <div class="chat-body">
+      <div id="msg-1" class="clip bubble-wrap-left" data-start="0.5" data-duration="3.5">
+        <div class="bubble-left">Picked up your order from Cafeteria! Hot & fresh 🍔</div>
+        <div class="bubble-meta" data-layout-ignore="true">Deliverer (Sakib • Shahid Hall) • Just now</div>
+      </div>
+
+      <div id="msg-2" class="clip bubble-wrap-right" data-start="1.8" data-duration="2.2">
+        <div class="bubble-right">Awesome! Heading downstairs right now 👍</div>
+        <div class="bubble-meta" data-layout-ignore="true">You • Just now</div>
+      </div>
+    </div>
+
+    <div class="quick-reply-bar">
+      <div class="quick-chip" data-layout-ignore="true">At the gate</div>
+      <div class="quick-chip" style="border-color:#047857; color:#047857; font-weight:800;" data-layout-ignore="true">On the campus bus 🚌</div>
+      <div class="quick-chip" data-layout-ignore="true">Arrived at hall</div>
+    </div>
+  </div>
+</div>
+<script>
+  const tl = gsap.timeline({ paused: true });
+
+  // Chat window entrance
+  tl.fromTo("#chat-window", { opacity: 0, scale: 0.95, y: 20 }, { opacity: 1, scale: 1, y: 0, duration: 0.4, ease: "power3.out" }, 0.1);
+
+  // Message 1 pop-in
+  tl.fromTo("#msg-1", { opacity: 0, y: 20, scale: 0.96 }, { opacity: 1, y: 0, scale: 1, duration: 0.35, ease: "back.out(1.4)" }, 0.5);
+
+  // Message 2 pop-in
+  tl.fromTo("#msg-2", { opacity: 0, y: 20, scale: 0.96 }, { opacity: 1, y: 0, scale: 1, duration: 0.35, ease: "back.out(1.4)" }, 1.8);
+
+  window.__timelines["chat"] = tl;
+</script>
+</template>
